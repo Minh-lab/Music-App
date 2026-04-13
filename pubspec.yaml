@@ -38,6 +38,9 @@ dependencies:
   flutter_bloc:
   hydrated_bloc: 
   path_provider:   
+  get_it: 
+  dartz:
+  supabase_flutter: ^2.12.2
 
 dev_dependencies:
   flutter_test:
@@ -75,3 +78,6 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+
+

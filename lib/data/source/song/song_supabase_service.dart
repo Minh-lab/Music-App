@@ -1,0 +1,21 @@
+import 'package:dartz/dartz.dart';
+import 'package:spotify_me/data/models/song/song.dart';
+import 'package:spotify_me/data/source/song/song_service.dart';
+import 'package:spotify_me/domain/entities/song/song.dart';
+import 'package:spotify_me/service_locator.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+class SongSupabaseService extends SongService {
+  @override
+  Future<Either<dynamic, dynamic>> getNewsSongs() async {
+    try {
+      List<SongEntity> songs = [];
+      var data = await sl<SupabaseClient>().from('songs').select();
+      songs = data.map((e) => SongModel.fromJson(e).toEntity()).toList();
+      return Right(songs);
+    } catch (e) {
+      print(e);
+      return Left('Error while installing songs');
+    }
+  }
+}

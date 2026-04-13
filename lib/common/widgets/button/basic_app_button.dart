@@ -13,13 +13,20 @@ class BasicAppButton extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(onPressed: onPressed, child: Text(title, style: TextStyle(
-      fontSize: 22,
-      color: Colors.white,
-      fontWeight: FontWeight.bold
-    ),), style: ElevatedButton.styleFrom(
-      backgroundColor: AppColors.primary,
-      minimumSize: Size.fromHeight(height ?? 80)
-    ),);
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.primary,
+        minimumSize: Size.fromHeight(height ?? 80),
+      ),
+      child: Text(
+        title,
+        style: TextStyle(
+          fontSize: 22,
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
   }
 }
