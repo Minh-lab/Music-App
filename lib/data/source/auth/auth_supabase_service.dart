@@ -23,6 +23,7 @@ class AuthSupabaseServiceImpl extends AuthService {
       }
       return Left(message);
     } catch (e) {
+      print(e);
       return const Left('An error occurred');
     }
   }

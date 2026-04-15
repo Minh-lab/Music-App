@@ -17,6 +17,7 @@ class SigninCubit extends Cubit<SigninState> {
     result.fold(
       (l) {
         emit(SigninFailure(errorMessage: l.toString()));
+      
       },
       (r) {
         emit(SigninSuccess());
