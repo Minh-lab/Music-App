@@ -9,4 +9,10 @@ class SongRepositoryImpl extends SongRepository {
     // TODO: implement getNewsSongs
     return await sl<SongService>().getNewsSongs();
   }
+  
+  @override
+  Future<Either<dynamic, dynamic>> getPlayList() {
+    // TODO: implement getPlayList
+    throw UnimplementedError();
+  }
 }

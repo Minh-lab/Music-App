@@ -6,6 +6,7 @@ class SongModel {
   final String title;
   final num duration;
   final DateTime releaseDate;
+  final String? audioUrl;
   final String? coverUrl; // tên file ảnh, ví dụ: "henyeu.jpg"
 
   SongModel({
@@ -13,6 +14,7 @@ class SongModel {
     required this.duration,
     required this.releaseDate,
     required this.title,
+    this.audioUrl,
     this.coverUrl,
   });
 
@@ -22,7 +24,9 @@ class SongModel {
       title: json['title'] ?? '',
       duration: json['duration'] ?? 0,
       // Supabase dùng snake_case: release_date
-      releaseDate: DateTime.tryParse(json['release_date'] ?? '') ?? DateTime.now(),
+      releaseDate:
+          DateTime.tryParse(json['release_date'] ?? '') ?? DateTime.now(),
+      audioUrl: json['audio_url'], // tên file ảnh trong bucket Supabase Storage
       coverUrl: json['cover_url'], // tên file ảnh trong bucket Supabase Storage
     );
   }
@@ -34,6 +38,7 @@ class SongModel {
       'duration': duration,
       'release_date': releaseDate.toIso8601String(),
       'cover_url': coverUrl,
+      'audio_url': audioUrl,
     };
   }
 }
@@ -47,7 +52,10 @@ extension SongModelToEntity on SongModel {
       title: title,
       // Ghép full URL từ base URL + tên file
       coverUrl: coverUrl != null
-          ? '${AppUrls.supabaseStorage}/$coverUrl'
+          ? '${AppUrls.supabaseCoversStorage}/$coverUrl'
+          : null,
+      audioUrl: audioUrl != null
+          ? '${AppUrls.supabaseSongsStorage}/$audioUrl'
           : null,
     );
   }

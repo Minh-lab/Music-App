@@ -8,6 +8,7 @@ import 'package:spotify_me/core/configs/assets/app_images.dart';
 import 'package:spotify_me/core/configs/assets/app_vectors.dart';
 import 'package:spotify_me/presentation/auth/pages/signup_or_signin.dart';
 import 'package:spotify_me/presentation/choose_mode/bloc/theme_cubit.dart';
+import 'package:spotify_me/presentation/home/pages/home.dart';
 
 class ChooseModePage extends StatefulWidget {
   @override
@@ -149,7 +150,7 @@ class ChooseModePageState extends State<ChooseModePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (BuildContext context) => const SignupOrSigninPage(),
+                        builder: (BuildContext context) => HomePage(),
                       ),
                     );
                   },

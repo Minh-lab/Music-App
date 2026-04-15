@@ -12,6 +12,7 @@ class SongSupabaseService extends SongService {
       List<SongEntity> songs = [];
       var data = await sl<SupabaseClient>().from('songs').select();
       songs = data.map((e) => SongModel.fromJson(e).toEntity()).toList();
+      songs.forEach((e)=>print(e.audioUrl));
       return Right(songs);
     } catch (e) {
       print(e);

@@ -18,8 +18,9 @@ Future<void> main() async {
     try {
       storagePath = (await getTemporaryDirectory()).path;
     } catch (e) {
-      // Bỏ qua lỗi JNI, dùng thẳng đường dẫn gốc của Android
-      storagePath = '/data/data/com.example.spotify_me/cache';
+      // Bắt mọi lỗi (bao gồm cả ArgumentError: libdartjni.so)
+      // Dùng đường dẫn internal mặc định của Android làm fallback
+      storagePath = '/data/user/0/com.example.spotify_me/cache';
     }
   }
 
