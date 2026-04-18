@@ -8,7 +8,7 @@ import 'package:spotify_me/presentation/home/bloc/news_song_state.dart';
 import 'package:spotify_me/presentation/home/bloc/news_songs_cubit.dart';
 import 'package:spotify_me/presentation/home/bloc/play_song_cubit.dart';
 import 'package:spotify_me/presentation/home/bloc/play_song_state.dart';
-import 'package:spotify_me/presentation/home/widgets/play_song.dart';
+import 'package:spotify_me/presentation/home/widgets/PlaySongPages/pages/play_song.dart';
 import 'package:spotify_me/presentation/home/widgets/play_song_button.dart';
 
 class NewsSong extends StatelessWidget {
@@ -23,7 +23,7 @@ class NewsSong extends StatelessWidget {
           builder: (context, state) {
             if (state is NewsSongLoading) {
               return Container(
-                alignment: .center,
+                alignment: Alignment.center,
                 child: CircularProgressIndicator(),
               );
             }

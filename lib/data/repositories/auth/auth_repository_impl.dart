@@ -17,5 +17,10 @@ class AuthRepositoryImpl extends AuthRepository {
     // TODO: implement signup
     return await sl<AuthService>().signup(createUserReq);
   }
-}
 
+  @override
+  Future<Either<dynamic, dynamic>> logout() async {
+    // TODO: implement logout
+    return await sl<AuthService>().logout();
+  }
+}
