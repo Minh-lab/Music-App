@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:spotify_me/data/models/song/song.dart';
+import 'package:spotify_me/data/models/song/song_model.dart';
 import 'package:spotify_me/data/source/song/song_service.dart';
 import 'package:spotify_me/domain/entities/song/song.dart';
 import 'package:spotify_me/service_locator.dart';

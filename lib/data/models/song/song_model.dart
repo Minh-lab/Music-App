@@ -2,6 +2,7 @@ import 'package:spotify_me/core/configs/constants/app_urls.dart';
 import 'package:spotify_me/domain/entities/song/song.dart';
 
 class SongModel {
+  final String id;
   final String artist;
   final String title;
   final num duration;
@@ -10,6 +11,7 @@ class SongModel {
   final String? coverUrl; // tên file ảnh, ví dụ: "henyeu.jpg"
 
   SongModel({
+    required this.id,
     required this.artist,
     required this.duration,
     required this.releaseDate,
@@ -20,6 +22,7 @@ class SongModel {
 
   factory SongModel.fromJson(Map<String, dynamic> json) {
     return SongModel(
+      id: json['id'].toString(),
       artist: json['artist'] ?? '',
       title: json['title'] ?? '',
       duration: json['duration'] ?? 0,
@@ -33,6 +36,7 @@ class SongModel {
 
   Map<String, dynamic> toJson() {
     return {
+      'id' : id,
       'artist': artist,
       'title': title,
       'duration': duration,
@@ -46,6 +50,7 @@ class SongModel {
 extension SongModelToEntity on SongModel {
   SongEntity toEntity() {
     return SongEntity(
+      id: id,
       artist: artist,
       duration: duration,
       releaseDate: releaseDate,

@@ -13,6 +13,7 @@ import 'package:spotify_me/presentation/auth/bloc/signin/signin_cubit.dart';
 import 'package:spotify_me/presentation/auth/bloc/signin/signin_state.dart';
 import 'package:spotify_me/presentation/auth/pages/signup.dart';
 import 'package:spotify_me/presentation/home/pages/home.dart';
+import 'package:spotify_me/presentation/main/pages/main_pages.dart';
 import 'package:spotify_me/service_locator.dart';
 
 class SigninPage extends StatefulWidget {
@@ -39,7 +40,7 @@ class _SigninPageState extends State<SigninPage> {
           if (state is SigninSuccess) {
             Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (BuildContext context) => HomePage()),
+              MaterialPageRoute(builder: (BuildContext context) => MainPages()),
               (route) => false,
             );
           }

@@ -4,8 +4,15 @@ import 'package:spotify_me/common/helpers/is_dark_mode.dart';
 import 'package:spotify_me/common/widgets/appbar/basic_appbar.dart';
 import 'package:spotify_me/core/configs/theme/app_colors.dart';
 import 'package:spotify_me/domain/entities/song/song.dart';
+import 'package:spotify_me/domain/usecases/favourite/is_song_in_favourite.dart';
+import 'package:spotify_me/presentation/favourite/bloc/favourite_cubit.dart';
+import 'package:spotify_me/presentation/favourite/bloc/favourite_state.dart'
+    hide SongInFavourite;
 import 'package:spotify_me/presentation/home/bloc/play_song_cubit.dart';
 import 'package:spotify_me/presentation/home/bloc/play_song_state.dart';
+import 'package:spotify_me/presentation/home/widgets/PlaySongPages/Bloc/song_favourite_cubit.dart';
+import 'package:spotify_me/presentation/home/widgets/PlaySongPages/Bloc/song_favourite_state.dart';
+import 'package:spotify_me/service_locator.dart';
 
 class PlaySong extends StatelessWidget {
   SongEntity? songEntity;
@@ -14,8 +21,15 @@ class PlaySong extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: BasicAppBar(title: Text('Now Playing'), enableChangeTheme: false),
-      body: BlocProvider(
-        create: (_) => PlaySongCubit(),
+      body: MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (_) => PlaySongCubit()),
+          BlocProvider.value(value: sl<FavouriteCubit>()),
+          BlocProvider(
+            create: (_) =>
+                sl<SongFavouriteCubit>()..IsSongInFavourite(songEntity!.id),
+          ),
+        ],
         child: BlocBuilder<PlaySongCubit, PlaySongState>(
           builder: (context, songState) {
             return SingleChildScrollView(
@@ -40,7 +54,26 @@ class PlaySong extends StatelessWidget {
                             _artistSong(context, songEntity!.artist),
                           ],
                         ),
-                        _favouriteButton(() {}),
+                        BlocBuilder<SongFavouriteCubit, SongFavouriteState>(
+                          builder: (context, state) {
+                            return _favouriteButton(state is SongInFavourite, () {
+                              if (state is SongNotInFavourite) {
+                                context
+                                    .read<FavouriteCubit>()
+                                    .addFavourite(songEntity!.id);
+                              } else if (state is SongInFavourite) {
+                                context
+                                    .read<FavouriteCubit>()
+                                    .removeFavourite(songEntity!.id);
+                              }
+                           
+                              // Dùng toggle để cập nhật giao diện (màu nút) tức thời ngầm!
+                              context
+                                  .read<SongFavouriteCubit>()
+                                  .toggleFavourite();
+                            });
+                          },
+                        ),
                       ],
                     ),
                     _sliderPlay(context),
@@ -156,10 +189,13 @@ class PlaySong extends StatelessWidget {
     );
   }
 
-  Widget _favouriteButton(VoidCallback onPressed) {
+  Widget _favouriteButton(bool isFavourite, VoidCallback onPressed) {
     return IconButton(
       onPressed: onPressed,
-      icon: Icon(Icons.favorite_border_rounded),
+      icon: Icon(
+        isFavourite ? Icons.favorite : Icons.favorite_border_rounded,
+        color: isFavourite ? AppColors.primary : null,
+      ),
     );
   }
 

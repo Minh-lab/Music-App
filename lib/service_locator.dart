@@ -1,15 +1,28 @@
 import 'package:get_it/get_it.dart';
+import 'package:spotify_me/domain/usecases/auth/logout.dart';
+import 'package:spotify_me/domain/usecases/favourite/is_song_in_favourite.dart';
+import 'package:spotify_me/domain/usecases/favourite/remove_song_favourite.dart';
+import 'package:spotify_me/presentation/favourite/bloc/favourite_cubit.dart';
 import 'package:spotify_me/data/repositories/auth/auth_repository_impl.dart';
+import 'package:spotify_me/data/repositories/favourite/favourite_repository_iml.dart';
 import 'package:spotify_me/data/repositories/song/song_repository_impl.dart';
 import 'package:spotify_me/data/source/auth/auth_service.dart';
 import 'package:spotify_me/data/source/auth/auth_supabase_service.dart';
+import 'package:spotify_me/data/source/favoutire/favourite_service.dart';
+import 'package:spotify_me/data/source/favoutire/favourite_supabase_iml.dart';
 import 'package:spotify_me/data/source/song/song_service.dart';
 import 'package:spotify_me/data/source/song/song_supabase_service.dart';
 import 'package:spotify_me/domain/repositories/auth/auth.dart';
 import 'package:spotify_me/domain/repositories/song/song_repository.dart';
 import 'package:spotify_me/domain/usecases/auth/signin.dart';
 import 'package:spotify_me/domain/usecases/auth/signup.dart';
+import 'package:spotify_me/domain/repositories/favourite/favourite_repository.dart';
+import 'package:spotify_me/domain/usecases/favourite/add_favourite_SongUsecase.dart';
+import 'package:spotify_me/domain/usecases/favourite/get_favourite.dart';
 import 'package:spotify_me/domain/usecases/song/get_news_songs.dart';
+import 'package:spotify_me/presentation/home/bloc/play_song_cubit.dart';
+import 'package:spotify_me/presentation/home/widgets/PlaySongPages/Bloc/song_favourite_cubit.dart';
+import 'package:spotify_me/presentation/home/widgets/PlaySongPages/Bloc/song_favourite_state.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 final sl = GetIt.instance;
@@ -20,7 +33,18 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<SongRepository>(SongRepositoryImpl());
   sl.registerSingleton<SignupUsecase>(SignupUsecase());
   sl.registerSingleton<SigninUsecase>(SigninUsecase());
+  sl.registerSingleton<GetFavouriteUsecase>(GetFavouriteUsecase());
   sl.registerSingleton<GetNewsSongsUsecase>(GetNewsSongsUsecase());
-  sl.registerSingleton<SupabaseClient>(Supabase.instance.client) ;
+  sl.registerSingleton<AddFavouriteSongUsecase>(AddFavouriteSongUsecase());
+  sl.registerSingleton<LogoutUsecase>(LogoutUsecase());
+  sl.registerSingleton<RemoveSongFavouriteUsecase>(
+    RemoveSongFavouriteUsecase(),
+  );
+  sl.registerSingleton<IsSongInFavouriteUsecase>(IsSongInFavouriteUsecase());
+  sl.registerSingleton<SupabaseClient>(Supabase.instance.client);
+  sl.registerSingleton<FavouriteService>(FavouriteSupabaseIml());
+  sl.registerSingleton<FavouriteRepository>(FavouriteRepositoryIml());
+  sl.registerLazySingleton<FavouriteCubit>(() => FavouriteCubit());
+  sl.registerLazySingleton<PlaySongCubit>(() => PlaySongCubit());
+  sl.registerFactory<SongFavouriteCubit>(() => SongFavouriteCubit());
 }
-
