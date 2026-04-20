@@ -24,6 +24,7 @@ class MainPagesState extends State<MainPages> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
+      
       body: IndexedStack(index: _selectedIndex, children: _pages),
       bottomNavigationBar: BasicAppNavigation(
         selectedIndex: _selectedIndex,

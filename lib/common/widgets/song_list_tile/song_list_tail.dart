@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spotify_me/common/helpers/format_duration.dart';
 import 'package:spotify_me/common/helpers/is_dark_mode.dart';
 import 'package:spotify_me/domain/entities/song/song.dart';
 import 'package:spotify_me/presentation/home/widgets/PlaySongPages/pages/play_song.dart';
@@ -21,7 +22,7 @@ class SongListTail extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => PlaySong(songEntity: song,)),
+          MaterialPageRoute(builder: (context) => PlaySong(songEntity: song)),
         );
       },
       child: Container(
@@ -70,7 +71,7 @@ class SongListTail extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  song.duration.toString(),
+                  FormatDurationTime.formatDuration(song.duration),
                   style: TextStyle(
                     fontSize: 15,
                     color: context.isDarkMode

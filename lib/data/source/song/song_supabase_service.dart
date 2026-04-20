@@ -19,4 +19,16 @@ class SongSupabaseService extends SongService {
       return Left('Error while installing songs');
     }
   }
+  
+  @override
+  Future<Either<dynamic, dynamic>> searchSong(String query) {
+    // TODO: implement searchSong
+    throw UnimplementedError();
+  }
+  
+  @override
+  Future<void> syncToDatabase(List<SongModel> songs) {
+    // TODO: implement syncToDatabase
+    throw UnimplementedError();
+  }
 }

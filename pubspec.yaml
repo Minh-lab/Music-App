@@ -43,6 +43,7 @@ dependencies:
   supabase_flutter: ^2.12.2
   just_audio: ^0.9.40
   audio_service: 
+  spotify: 
 
 dev_dependencies:
   flutter_test:

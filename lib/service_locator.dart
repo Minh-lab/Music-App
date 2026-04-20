@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:spotify_me/data/source/song/song_itunes_service.dart';
 import 'package:spotify_me/domain/usecases/auth/logout.dart';
 import 'package:spotify_me/domain/usecases/favourite/is_song_in_favourite.dart';
 import 'package:spotify_me/domain/usecases/favourite/remove_song_favourite.dart';
@@ -28,7 +29,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 final sl = GetIt.instance;
 Future<void> initializeDependencies() async {
   sl.registerSingleton<AuthService>(AuthSupabaseServiceImpl());
-  sl.registerSingleton<SongService>(SongSupabaseService());
+  sl.registerSingleton<SongService>(SongItunesService());
   sl.registerSingleton<AuthRepository>(AuthRepositoryImpl());
   sl.registerSingleton<SongRepository>(SongRepositoryImpl());
   sl.registerSingleton<SignupUsecase>(SignupUsecase());

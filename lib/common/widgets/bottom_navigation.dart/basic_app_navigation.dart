@@ -4,7 +4,7 @@ import 'package:spotify_me/core/configs/theme/app_colors.dart';
 
 class BasicAppNavigation extends StatelessWidget {
   final int selectedIndex;
-  final Function(int) onTap; // Callback truyền index về cho cha
+  final Function(int) onTap; 
   const BasicAppNavigation({
     super.key,
     required this.selectedIndex,
@@ -14,16 +14,15 @@ class BasicAppNavigation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 80, // Tăng chiều cao một chút để icon "thở" được
+      height: 80, 
       padding: const EdgeInsets.symmetric(horizontal: 30),
       decoration: BoxDecoration(
         // Màu sắc dựa trên chế độ sáng/tối
         color: context.isDarkMode ? const Color(0xFF343434) : Colors.white,
         borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(40),
-          bottomRight: Radius.circular(40),
+          topLeft: Radius.circular(40),
+          topRight: Radius.circular(40),
         ),
-        // Thêm một chút bóng để nổi bật hơn trên nền body
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.1),
@@ -44,7 +43,6 @@ class BasicAppNavigation extends StatelessWidget {
     );
   }
 
-  // Hàm tạo từng item cho đỡ lặp code
 
   Widget _navItem(IconData icon, int index) {
     // So sánh index để biết có đang được chọn hay không

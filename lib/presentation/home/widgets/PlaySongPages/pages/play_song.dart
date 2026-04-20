@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spotify_me/common/helpers/format_duration.dart';
 import 'package:spotify_me/common/helpers/is_dark_mode.dart';
 import 'package:spotify_me/common/widgets/appbar/basic_appbar.dart';
 import 'package:spotify_me/core/configs/theme/app_colors.dart';
@@ -49,7 +50,7 @@ class PlaySong extends StatelessWidget {
                         Column(
                           crossAxisAlignment: .start,
                           children: [
-                            _titleSong(context, songEntity!.title!),
+                            SizedBox(width: 350,child: _titleSong(context, songEntity!.title!)),
                             SizedBox(height: 8),
                             _artistSong(context, songEntity!.artist),
                           ],
@@ -149,8 +150,8 @@ class PlaySong extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(_formatDuration(position)),
-                  Text(_formatDuration(duration)),
+                  Text(FormatDurationTime.formatDuration(position)),
+                  Text(FormatDurationTime.formatDuration(duration)),
                 ],
               ),
             ),
@@ -161,16 +162,13 @@ class PlaySong extends StatelessWidget {
   }
 
   // Hàm format thời gian mm:ss
-  String _formatDuration(Duration duration) {
-    String twoDigits(int n) => n.toString().padLeft(2, "0");
-    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
-    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
-    return "$twoDigitMinutes:$twoDigitSeconds";
-  }
+  
 
   Widget _titleSong(BuildContext context, String title) {
     return Text(
       title,
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis,
       style: TextStyle(
         color: context.isDarkMode ? Color(0xFFDFDFDF) : Colors.black,
         fontSize: 18,
@@ -200,19 +198,23 @@ class PlaySong extends StatelessWidget {
   }
 
   Widget _playSongButton(PlaySongState state, VoidCallback onPressed) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: Container(
-        padding: EdgeInsets.all(22),
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: AppColors.primary,
-        ),
-        child: (state is PlaySongStart)
-            ? Icon(Icons.pause_outlined, size: 50, color: Colors.white)
-            : Icon(Icons.play_arrow_outlined, size: 50, color: Colors.white),
-      ),
-    );
+    return  ElevatedButton(
+    onPressed: onPressed,
+    style: ElevatedButton.styleFrom(
+      backgroundColor: AppColors.primary, 
+      shape: const CircleBorder(), 
+      padding: const EdgeInsets.all(22),
+      elevation: 8, 
+      shadowColor: Colors.black.withValues(alpha: 0.5), 
+    ),
+    child: Icon(
+      (state is PlaySongStart)
+          ? Icons.pause_outlined
+          : Icons.play_arrow_outlined,
+      size: 50,
+      color: Colors.white,
+    ),
+  );
   }
 
   Widget _previousSongButton(BuildContext context, VoidCallback onPressed) {

@@ -18,7 +18,7 @@ class FavouritePages extends StatelessWidget {
       ),
       body: BlocProvider.value(
         value: sl<FavouriteCubit>()..getFavourite(),
-        child: BlocBuilder<FavouriteCubit, FavouriteState>(
+        child: BlocConsumer<FavouriteCubit, FavouriteState>(
           builder: (context, state) {
             if (state is FavouriteLoading) {
               return const Center(child: CircularProgressIndicator());
@@ -75,7 +75,6 @@ class FavouritePages extends StatelessWidget {
                                           .removeFavourite(songs[index].id);
                                     },
                                   ),
-                                  
                                 ],
                               ),
                             );
@@ -89,6 +88,20 @@ class FavouritePages extends StatelessWidget {
               );
             }
             return const Center(child: Text('Unknown state'));
+          },
+          listener: (BuildContext context, FavouriteState state) {
+            if (state is FavouriteRemoveSuccess) {
+              var snackbar = new SnackBar(
+                content: Text('Remove song from favourite successfully'),
+              );
+              ScaffoldMessenger.of(context).showSnackBar(snackbar);
+            }
+            else if(state is FavouriteRemoveFailure){
+                var snackbar = new SnackBar(
+                content: Text('Remove song from favourite failure'),
+              );
+              ScaffoldMessenger.of(context).showSnackBar(snackbar);
+            }
           },
         ),
       ),
