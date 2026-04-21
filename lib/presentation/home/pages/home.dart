@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage>
           mainAxisAlignment: .center,
           // crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _homeArtistCard(),
+            // _homeArtistCard(),
             _tabs(),
             SizedBox(
               height: 350,
@@ -57,9 +57,9 @@ class _HomePageState extends State<HomePage>
                 physics: const NeverScrollableScrollPhysics(),
                 children: [
                   NewsSong(),
-                  Text('Videos'),
-                  Text('Artist'),
-                  Text('Podcasts'),
+                  Text(''),
+                  Text(''),
+                  Text(''),
                 ],
               ),
             ),

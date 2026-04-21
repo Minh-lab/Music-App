@@ -1,14 +1,13 @@
-import 'package:spotify_me/core/configs/constants/app_urls.dart';
 import 'package:spotify_me/domain/entities/song/song.dart';
 
 class SongModel {
   final String id;
   final String artist;
   final String title;
-  final num duration;
+  final Duration duration;
   final DateTime releaseDate;
   final String? audioUrl;
-  final String? coverUrl; // tên file ảnh, ví dụ: "henyeu.jpg"
+  final String? coverUrl;
 
   SongModel({
     required this.id,
@@ -22,27 +21,29 @@ class SongModel {
 
   factory SongModel.fromJson(Map<String, dynamic> json) {
     return SongModel(
-      id: json['id'].toString(),
-      artist: json['artist'] ?? '',
-      title: json['title'] ?? '',
-      duration: json['duration'] ?? 0,
-      // Supabase dùng snake_case: release_date
-      releaseDate:
-          DateTime.tryParse(json['release_date'] ?? '') ?? DateTime.now(),
-      audioUrl: json['audio_url'], // tên file ảnh trong bucket Supabase Storage
-      coverUrl: json['cover_url'], // tên file ảnh trong bucket Supabase Storage
+      id: json['id']?.toString() ?? '',
+      title: json['title']?.toString() ?? 'Unknown Title',
+      artist: json['artist']?.toString() ?? 'Unknown Artist',
+      coverUrl: json['cover_url']?.toString(),
+      audioUrl: json['audio_url']?.toString(),
+      duration: json['duration'] != null
+          ? Duration(seconds: (json['duration'] as num).toInt())
+          : Duration.zero,                        
+      releaseDate: json['releaseDate'] != null
+          ? DateTime.tryParse(json['releaseDate'].toString()) ?? DateTime.now()
+          : DateTime.now(),                   
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id' : id,
-      'artist': artist,
+      'id': int.tryParse(id) ?? 0,               
       'title': title,
-      'duration': duration,
-      'release_date': releaseDate.toIso8601String(),
+      'artist': artist,
       'cover_url': coverUrl,
       'audio_url': audioUrl,
+      'duration': duration.inSeconds,          
+      'releaseDate': releaseDate.toIso8601String(), 
     };
   }
 }
@@ -55,13 +56,8 @@ extension SongModelToEntity on SongModel {
       duration: duration,
       releaseDate: releaseDate,
       title: title,
-      // Ghép full URL từ base URL + tên file
-      coverUrl: coverUrl != null
-          ? '${AppUrls.supabaseCoversStorage}/$coverUrl'
-          : null,
-      audioUrl: audioUrl != null
-          ? '${AppUrls.supabaseSongsStorage}/$audioUrl'
-          : null,
+      coverUrl: coverUrl,
+      audioUrl: audioUrl,
     );
   }
 }

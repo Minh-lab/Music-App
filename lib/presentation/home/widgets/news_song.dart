@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spotify_me/common/circle_process/circle_process.dart';
 import 'package:spotify_me/common/helpers/is_dark_mode.dart';
 import 'package:spotify_me/core/configs/constants/app_urls.dart';
 import 'package:spotify_me/core/configs/theme/app_colors.dart';
@@ -22,10 +23,7 @@ class NewsSong extends StatelessWidget {
         child: BlocBuilder<NewsSongsCubit, NewsSongState>(
           builder: (context, state) {
             if (state is NewsSongLoading) {
-              return Container(
-                alignment: Alignment.center,
-                child: CircularProgressIndicator(),
-              );
+              return CircleProcess();
             }
             if (state is NewsSongLoaded) {
               return _songs(state.songs);

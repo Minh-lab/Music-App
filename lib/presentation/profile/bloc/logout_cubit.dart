@@ -13,7 +13,7 @@ class LogoutCubit extends Cubit<LogoutState> {
       },
       (r) {
         if (r == true) {
-          emit(LogoutSuccess());
+          // emit(LogoutSuccess());
         } else {
           emit(LogoutFailure());
         }

@@ -26,7 +26,6 @@ class FavouriteCubit extends Cubit<FavouriteState> {
     result.fold(
       (l) {
         emit(FavouriteAddFailure(errorMessage: l));
-
       },
       (r) {
         emit(FavouriteAddSuccess());
@@ -39,11 +38,12 @@ class FavouriteCubit extends Cubit<FavouriteState> {
     var result = await sl<RemoveSongFavouriteUsecase>().call(params: songId);
     result.fold(
       (l) {
+        print('error');
         emit(FavouriteRemoveFailure(errorMessage: l));
-        // Tùy chọn xử lý lỗi nếu cần
       },
       (r) {
-        
+        print('delete song from favourite success');
+        emit(FavouriteRemoveSuccess());
         getFavourite();
       },
     );

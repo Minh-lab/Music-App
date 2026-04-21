@@ -7,6 +7,7 @@ import 'package:spotify_me/core/configs/assets/app_images.dart';
 import 'package:spotify_me/core/configs/assets/app_vectors.dart';
 import 'package:spotify_me/presentation/auth/pages/signin.dart';
 import 'package:spotify_me/presentation/auth/pages/signup.dart';
+import 'package:spotify_me/presentation/home/pages/home.dart';
 
 class SignupOrSigninPage extends StatelessWidget {
   const SignupOrSigninPage({super.key});
