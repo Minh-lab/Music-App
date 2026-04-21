@@ -30,8 +30,17 @@ class SongListTail extends StatelessWidget {
         padding: const EdgeInsets.only(top: 20, right: 10),
         child: Row(
           children: [
-            // 1. Nút Play
-            GestureDetector(onTap: () {}, child: PlaySongButton(context, song)),
+            Container(
+              width: 70,
+              height: 70,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.network(
+                  song.coverUrl.toString(),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
             const SizedBox(width: 10),
 
             Expanded(

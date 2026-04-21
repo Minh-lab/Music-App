@@ -14,6 +14,7 @@ class FavouritePages extends StatelessWidget {
     return Scaffold(
       appBar: BasicAppBar(
         hideBack: true,
+        hideSearch: false,
         title: Text('My Favourite', style: TextStyle()),
       ),
       body: BlocProvider.value(
@@ -41,6 +42,7 @@ class FavouritePages extends StatelessWidget {
               }
 
               return ListView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 itemCount: songs.length,
                 itemBuilder: (context, index) {
                   return SongListTail(

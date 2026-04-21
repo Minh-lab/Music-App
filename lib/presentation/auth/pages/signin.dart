@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:spotify_me/common/circle_process/circle_process.dart';
 import 'package:spotify_me/common/helpers/is_dark_mode.dart';
 import 'package:spotify_me/common/widgets/appbar/basic_appbar.dart';
 import 'package:spotify_me/common/widgets/button/basic_app_button.dart';
@@ -114,7 +115,7 @@ class _SigninPageState extends State<SigninPage> {
                       filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
                       child: Container(
                         color: Colors.black.withValues(alpha: 0.2),
-                        child: Center(child: CircularProgressIndicator()),
+                        child: CircleProcess(),
                       ),
                     ),
                   ),

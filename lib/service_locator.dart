@@ -3,6 +3,7 @@ import 'package:spotify_me/data/source/song/song_itunes_service.dart';
 import 'package:spotify_me/domain/usecases/auth/logout.dart';
 import 'package:spotify_me/domain/usecases/favourite/is_song_in_favourite.dart';
 import 'package:spotify_me/domain/usecases/favourite/remove_song_favourite.dart';
+import 'package:spotify_me/domain/usecases/song/search_song.dart';
 import 'package:spotify_me/presentation/favourite/bloc/favourite_cubit.dart';
 import 'package:spotify_me/data/repositories/auth/auth_repository_impl.dart';
 import 'package:spotify_me/data/repositories/favourite/favourite_repository_iml.dart';
@@ -21,6 +22,7 @@ import 'package:spotify_me/domain/repositories/favourite/favourite_repository.da
 import 'package:spotify_me/domain/usecases/favourite/add_favourite_SongUsecase.dart';
 import 'package:spotify_me/domain/usecases/favourite/get_favourite.dart';
 import 'package:spotify_me/domain/usecases/song/get_news_songs.dart';
+import 'package:spotify_me/presentation/home/bloc/news_songs_cubit.dart';
 import 'package:spotify_me/presentation/home/bloc/play_song_cubit.dart';
 import 'package:spotify_me/presentation/home/widgets/PlaySongPages/Bloc/song_favourite_cubit.dart';
 import 'package:spotify_me/presentation/home/widgets/PlaySongPages/Bloc/song_favourite_state.dart';
@@ -48,4 +50,6 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton<FavouriteCubit>(() => FavouriteCubit());
   sl.registerLazySingleton<PlaySongCubit>(() => PlaySongCubit());
   sl.registerFactory<SongFavouriteCubit>(() => SongFavouriteCubit());
+  sl.registerFactory<NewsSongsCubit>(() => NewsSongsCubit());
+  sl.registerSingleton<SearchSongUsecase>(SearchSongUsecase());
 }

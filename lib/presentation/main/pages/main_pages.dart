@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spotify_me/common/widgets/bottom_navigation.dart/basic_app_navigation.dart';
+import 'package:spotify_me/presentation/explore/pages/explore_pages.dart';
 import 'package:spotify_me/presentation/favourite/pages/favourite_pages.dart';
 import 'package:spotify_me/presentation/home/pages/home.dart';
 import 'package:spotify_me/presentation/profile/pages/profile.dart';
@@ -16,8 +17,8 @@ class MainPagesState extends State<MainPages> {
   int _selectedIndex = 0;
   final List<Widget> _pages = [
     HomePage(), // Tab 0
-    const Center(child: Text("Search")),
-    FavouritePages(),
+    ExplorePages(),
+?
     Profile(),
   ];
   @override
