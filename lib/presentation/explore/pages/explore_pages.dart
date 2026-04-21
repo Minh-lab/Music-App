@@ -9,8 +9,8 @@ import 'package:spotify_me/domain/entities/song/song.dart';
 import 'package:spotify_me/presentation/explore/bloc/search_song_cubit.dart';
 import 'package:spotify_me/presentation/explore/bloc/search_song_state.dart';
 import 'package:spotify_me/presentation/favourite/bloc/favourite_cubit.dart';
-import 'package:spotify_me/presentation/home/bloc/news_song_state.dart';
-import 'package:spotify_me/presentation/home/bloc/news_songs_cubit.dart';
+import 'package:spotify_me/presentation/home/bloc/new_songs_cubit/news_song_state.dart';
+import 'package:spotify_me/presentation/home/bloc/new_songs_cubit/news_songs_cubit.dart';
 import 'package:spotify_me/service_locator.dart';
 
 class ExplorePages extends StatefulWidget {

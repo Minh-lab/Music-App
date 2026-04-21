@@ -1,5 +1,11 @@
 import 'package:get_it/get_it.dart';
+import 'package:spotify_me/data/repositories/artists/artists_repository_iml.dart';
+import 'package:spotify_me/data/source/artists/artists_itunes_service.dart';
+import 'package:spotify_me/data/source/artists/artists_service.dart';
 import 'package:spotify_me/data/source/song/song_itunes_service.dart';
+import 'package:spotify_me/domain/repositories/artists/artists_repository.dart';
+import 'package:spotify_me/domain/usecases/artists/get_artists.dart';
+import 'package:spotify_me/domain/usecases/artists/get_artists_by_id.dart';
 import 'package:spotify_me/domain/usecases/auth/logout.dart';
 import 'package:spotify_me/domain/usecases/favourite/is_song_in_favourite.dart';
 import 'package:spotify_me/domain/usecases/favourite/remove_song_favourite.dart';
@@ -22,8 +28,8 @@ import 'package:spotify_me/domain/repositories/favourite/favourite_repository.da
 import 'package:spotify_me/domain/usecases/favourite/add_favourite_SongUsecase.dart';
 import 'package:spotify_me/domain/usecases/favourite/get_favourite.dart';
 import 'package:spotify_me/domain/usecases/song/get_news_songs.dart';
-import 'package:spotify_me/presentation/home/bloc/news_songs_cubit.dart';
-import 'package:spotify_me/presentation/home/bloc/play_song_cubit.dart';
+import 'package:spotify_me/presentation/home/bloc/new_songs_cubit/news_songs_cubit.dart';
+import 'package:spotify_me/presentation/home/bloc/play_song_cubit/play_song_cubit.dart';
 import 'package:spotify_me/presentation/home/widgets/PlaySongPages/Bloc/song_favourite_cubit.dart';
 import 'package:spotify_me/presentation/home/widgets/PlaySongPages/Bloc/song_favourite_state.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -31,9 +37,11 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 final sl = GetIt.instance;
 Future<void> initializeDependencies() async {
   sl.registerSingleton<AuthService>(AuthSupabaseServiceImpl());
+  sl.registerSingleton<ArtistsService>(ArtistsItunesService());
   sl.registerSingleton<SongService>(SongItunesService());
   sl.registerSingleton<AuthRepository>(AuthRepositoryImpl());
   sl.registerSingleton<SongRepository>(SongRepositoryImpl());
+  sl.registerSingleton<ArtistsRepository>(ArtistsRepositoryIml());
   sl.registerSingleton<SignupUsecase>(SignupUsecase());
   sl.registerSingleton<SigninUsecase>(SigninUsecase());
   sl.registerSingleton<GetFavouriteUsecase>(GetFavouriteUsecase());
@@ -44,6 +52,8 @@ Future<void> initializeDependencies() async {
     RemoveSongFavouriteUsecase(),
   );
   sl.registerSingleton<IsSongInFavouriteUsecase>(IsSongInFavouriteUsecase());
+  sl.registerSingleton<GetArtistsUsecase>(GetArtistsUsecase());
+  sl.registerSingleton<GetArtistsByIdUsecase>(GetArtistsByIdUsecase());
   sl.registerSingleton<SupabaseClient>(Supabase.instance.client);
   sl.registerSingleton<FavouriteService>(FavouriteSupabaseIml());
   sl.registerSingleton<FavouriteRepository>(FavouriteRepositoryIml());
