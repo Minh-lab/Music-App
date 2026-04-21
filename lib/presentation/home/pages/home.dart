@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:spotify/spotify.dart';
 import 'package:spotify_me/common/helpers/is_dark_mode.dart';
 import 'package:spotify_me/common/widgets/appbar/basic_appbar.dart';
 import 'package:spotify_me/common/widgets/bottom_navigation.dart/basic_app_navigation.dart';
@@ -12,8 +13,9 @@ import 'package:spotify_me/domain/entities/song/song.dart';
 import 'package:spotify_me/domain/usecases/favourite/add_favourite_SongUsecase.dart';
 import 'package:spotify_me/presentation/favourite/bloc/favourite_cubit.dart';
 import 'package:spotify_me/presentation/favourite/bloc/favourite_state.dart';
-import 'package:spotify_me/presentation/home/bloc/news_song_state.dart';
-import 'package:spotify_me/presentation/home/bloc/news_songs_cubit.dart';
+import 'package:spotify_me/presentation/home/bloc/new_songs_cubit/news_song_state.dart';
+import 'package:spotify_me/presentation/home/bloc/new_songs_cubit/news_songs_cubit.dart';
+import 'package:spotify_me/presentation/home/widgets/list_artists.dart';
 import 'package:spotify_me/presentation/home/widgets/news_song.dart';
 import 'package:spotify_me/presentation/home/widgets/play_song_button.dart';
 import 'package:spotify_me/service_locator.dart';
@@ -58,7 +60,7 @@ class _HomePageState extends State<HomePage>
                 children: [
                   NewsSong(),
                   Text(''),
-                  Text(''),
+                  ListArtists(),
                   Text(''),
                 ],
               ),
@@ -71,29 +73,29 @@ class _HomePageState extends State<HomePage>
     );
   }
 
-  Widget _homeArtistCard() {
-    return Center(
-      child: Container(
-        height: 140,
-        width: double.infinity,
-        child: Stack(
-          children: [
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: SvgPicture.asset(AppVectors.homeTopCard),
-            ),
-            Align(
-              alignment: .bottomRight,
-              child: Padding(
-                padding: const EdgeInsets.only(right: 100),
-                child: Positioned(child: Image.asset(AppImages.homeArtist)),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  // Widget _homeArtistCard() {
+  //   return Center(
+  //     child: Container(
+  //       height: 140,
+  //       width: double.infinity,
+  //       child: Stack(
+  //         children: [
+  //           Align(
+  //             alignment: Alignment.bottomCenter,
+  //             child: SvgPicture.asset(AppVectors.homeTopCard),
+  //           ),
+  //           Align(
+  //             alignment: .bottomRight,
+  //             child: Padding(
+  //               padding: const EdgeInsets.only(right: 100),
+  //               child: Positioned(child: Image.asset(AppImages.homeArtist)),
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _tabs() {
     return TabBar(

@@ -9,8 +9,8 @@ import 'package:spotify_me/domain/usecases/favourite/is_song_in_favourite.dart';
 import 'package:spotify_me/presentation/favourite/bloc/favourite_cubit.dart';
 import 'package:spotify_me/presentation/favourite/bloc/favourite_state.dart'
     hide SongInFavourite;
-import 'package:spotify_me/presentation/home/bloc/play_song_cubit.dart';
-import 'package:spotify_me/presentation/home/bloc/play_song_state.dart';
+import 'package:spotify_me/presentation/home/bloc/play_song_cubit/play_song_cubit.dart';
+import 'package:spotify_me/presentation/home/bloc/play_song_cubit/play_song_state.dart';
 import 'package:spotify_me/presentation/home/widgets/PlaySongPages/Bloc/song_favourite_cubit.dart';
 import 'package:spotify_me/presentation/home/widgets/PlaySongPages/Bloc/song_favourite_state.dart';
 import 'package:spotify_me/service_locator.dart';
@@ -106,7 +106,7 @@ class PlaySong extends StatelessWidget {
 
   Widget _artistsCard(BuildContext context, SongEntity song) {
     return Container(
-      height: MediaQuery.of(context).size.height / 2,
+      height: MediaQuery.of(context).size.height / 2.2,
       decoration: BoxDecoration(
         color: Colors.amber,
         borderRadius: BorderRadius.circular(30),

@@ -18,7 +18,7 @@ class MainPagesState extends State<MainPages> {
   final List<Widget> _pages = [
     HomePage(), // Tab 0
     ExplorePages(),
-?
+    FavouritePages(),
     Profile(),
   ];
   @override

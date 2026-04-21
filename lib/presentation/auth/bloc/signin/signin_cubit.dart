@@ -20,7 +20,7 @@ class SigninCubit extends Cubit<SigninState> {
       
       },
       (r) {
-        emit(SigninSuccess());
+        if(!isClosed)emit(SigninSuccess());
       },
     );
   }
