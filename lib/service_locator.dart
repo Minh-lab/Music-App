@@ -9,8 +9,9 @@ import 'package:spotify_me/domain/usecases/artists/get_artists_by_id.dart';
 import 'package:spotify_me/domain/usecases/auth/logout.dart';
 import 'package:spotify_me/domain/usecases/favourite/is_song_in_favourite.dart';
 import 'package:spotify_me/domain/usecases/favourite/remove_song_favourite.dart';
+import 'package:spotify_me/domain/usecases/favourite/search_songs_in_favourite.dart';
 import 'package:spotify_me/domain/usecases/song/search_song.dart';
-import 'package:spotify_me/presentation/favourite/bloc/favourite_cubit.dart';
+import 'package:spotify_me/presentation/favourite/bloc/favourite_crud/favourite_cubit.dart';
 import 'package:spotify_me/data/repositories/auth/auth_repository_impl.dart';
 import 'package:spotify_me/data/repositories/favourite/favourite_repository_iml.dart';
 import 'package:spotify_me/data/repositories/song/song_repository_impl.dart';
@@ -39,6 +40,7 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<AuthService>(AuthSupabaseServiceImpl());
   sl.registerSingleton<ArtistsService>(ArtistsItunesService());
   sl.registerSingleton<SongService>(SongItunesService());
+  sl.registerSingleton<FavouriteService>(FavouriteSupabaseIml());
   sl.registerSingleton<AuthRepository>(AuthRepositoryImpl());
   sl.registerSingleton<SongRepository>(SongRepositoryImpl());
   sl.registerSingleton<ArtistsRepository>(ArtistsRepositoryIml());
@@ -52,10 +54,10 @@ Future<void> initializeDependencies() async {
     RemoveSongFavouriteUsecase(),
   );
   sl.registerSingleton<IsSongInFavouriteUsecase>(IsSongInFavouriteUsecase());
+  sl.registerSingleton<SearchSongsInFavouriteUsecase>(SearchSongsInFavouriteUsecase());
   sl.registerSingleton<GetArtistsUsecase>(GetArtistsUsecase());
   sl.registerSingleton<GetArtistsByIdUsecase>(GetArtistsByIdUsecase());
   sl.registerSingleton<SupabaseClient>(Supabase.instance.client);
-  sl.registerSingleton<FavouriteService>(FavouriteSupabaseIml());
   sl.registerSingleton<FavouriteRepository>(FavouriteRepositoryIml());
   sl.registerLazySingleton<FavouriteCubit>(() => FavouriteCubit());
   sl.registerLazySingleton<PlaySongCubit>(() => PlaySongCubit());

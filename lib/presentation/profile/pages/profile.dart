@@ -15,7 +15,16 @@ class Profile extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      appBar: BasicAppBar(hideBack: true),
+      appBar: BasicAppBar(
+        title: Text(
+          'Profile',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20, // Làm to tiêu đề cho đẹp
+            color: context.isDarkMode ? Color(0xFFDBDBDB) : Colors.black,
+          ),
+        ),
+      ),
 
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -37,7 +46,7 @@ class Profile extends StatelessWidget {
               color: Color(0xFFD9D9D9),
               border: Border.all(
                 width: 2,
-                color: context.isDarkMode ? AppColors.primary : Colors.black,
+                color: context.isDarkMode ? Colors.transparent : Colors.black,
               ),
             ),
             child: ClipOval(

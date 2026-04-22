@@ -11,8 +11,8 @@ import 'package:spotify_me/core/configs/assets/app_vectors.dart';
 import 'package:spotify_me/core/configs/theme/app_colors.dart';
 import 'package:spotify_me/domain/entities/song/song.dart';
 import 'package:spotify_me/domain/usecases/favourite/add_favourite_SongUsecase.dart';
-import 'package:spotify_me/presentation/favourite/bloc/favourite_cubit.dart';
-import 'package:spotify_me/presentation/favourite/bloc/favourite_state.dart';
+import 'package:spotify_me/presentation/favourite/bloc/favourite_crud/favourite_cubit.dart';
+import 'package:spotify_me/presentation/favourite/bloc/favourite_crud/favourite_state.dart';
 import 'package:spotify_me/presentation/home/bloc/new_songs_cubit/news_song_state.dart';
 import 'package:spotify_me/presentation/home/bloc/new_songs_cubit/news_songs_cubit.dart';
 import 'package:spotify_me/presentation/home/widgets/list_artists.dart';
@@ -40,7 +40,7 @@ class _HomePageState extends State<HomePage>
     return Scaffold(
       appBar: BasicAppBar(
         enableChangeTheme: true,
-        hideBack: true,
+        // hideBack: true,
         title: SvgPicture.asset(AppVectors.logo, height: 40, width: 40),
       ),
       extendBody: true,
@@ -57,12 +57,7 @@ class _HomePageState extends State<HomePage>
               child: TabBarView(
                 controller: _tabController,
                 physics: const NeverScrollableScrollPhysics(),
-                children: [
-                  NewsSong(),
-                  Text(''),
-                  ListArtists(),
-                  Text(''),
-                ],
+                children: [NewsSong(), Text(''), ListArtists(), Text('')],
               ),
             ),
             SizedBox(height: 10),
@@ -198,6 +193,7 @@ class _HomePageState extends State<HomePage>
                           return SongListTail(
                             context: context,
                             song: songs[index],
+                            playlist: songs,
                           );
                         },
                       ),

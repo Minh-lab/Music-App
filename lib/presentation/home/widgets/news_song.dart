@@ -47,7 +47,8 @@ class NewsSong extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => PlaySong(songEntity: song),
+                builder: (context) =>
+                    PlaySong(songEntity: song, playlist: songs),
               ),
             );
           },
@@ -126,7 +127,7 @@ class NewsSong extends StatelessWidget {
                         ? AppColors.grayDark
                         : const Color(0xFFE6E6E6),
                   ),
-                  child: PlaySongButton(context, song),
+                  child: PlaySongButton(context, song, songs),
                 ),
               ),
             ],
@@ -137,6 +138,4 @@ class NewsSong extends StatelessWidget {
       itemCount: songs.length,
     );
   }
-
-   
 }

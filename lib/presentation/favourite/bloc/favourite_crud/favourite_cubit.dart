@@ -4,12 +4,14 @@ import 'package:spotify_me/domain/usecases/favourite/add_favourite_SongUsecase.d
 import 'package:spotify_me/domain/usecases/favourite/get_favourite.dart';
 import 'package:spotify_me/domain/usecases/favourite/is_song_in_favourite.dart';
 import 'package:spotify_me/domain/usecases/favourite/remove_song_favourite.dart';
-import 'package:spotify_me/presentation/favourite/bloc/favourite_state.dart';
+import 'package:spotify_me/presentation/favourite/bloc/favourite_crud/favourite_state.dart';
 import 'package:spotify_me/service_locator.dart';
 
 class FavouriteCubit extends Cubit<FavouriteState> {
   FavouriteCubit() : super(FavouriteLoading());
   Future<void> getFavourite() async {
+    emit(FavouriteLoading());
+
     var result = await sl<GetFavouriteUsecase>().call();
     result.fold(
       (l) {
@@ -39,11 +41,11 @@ class FavouriteCubit extends Cubit<FavouriteState> {
     result.fold(
       (l) {
         print('error');
-        emit(FavouriteRemoveFailure(errorMessage: l));
+        if (!isClosed) emit(FavouriteRemoveFailure(errorMessage: l));
       },
       (r) {
         print('delete song from favourite success');
-        emit(FavouriteRemoveSuccess());
+        if (!isClosed) emit(FavouriteRemoveSuccess());
         getFavourite();
       },
     );

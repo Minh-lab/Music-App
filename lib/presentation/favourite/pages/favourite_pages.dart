@@ -1,24 +1,54 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spotify_me/common/circle_process/circle_process.dart';
+import 'package:spotify_me/common/helpers/is_dark_mode.dart';
 import 'package:spotify_me/common/widgets/appbar/basic_appbar.dart';
 import 'package:spotify_me/common/widgets/song_list_tile/song_list_tail.dart';
+import 'package:spotify_me/core/configs/theme/app_colors.dart';
 import 'package:spotify_me/domain/entities/song/song.dart';
-import 'package:spotify_me/presentation/favourite/bloc/favourite_cubit.dart';
-import 'package:spotify_me/presentation/favourite/bloc/favourite_state.dart';
+import 'package:spotify_me/presentation/favourite/bloc/favourite_crud/favourite_cubit.dart';
+import 'package:spotify_me/presentation/favourite/bloc/favourite_crud/favourite_state.dart';
+import 'package:spotify_me/presentation/favourite/bloc/search_favourite/search_favourite_cubit.dart';
+import 'package:spotify_me/presentation/favourite/bloc/search_favourite/search_favourite_state.dart';
 import 'package:spotify_me/service_locator.dart';
 
-class FavouritePages extends StatelessWidget {
+class FavouritePages extends StatefulWidget {
+  @override
+  State<FavouritePages> createState() => _FavouritePagesState();
+}
+
+class _FavouritePagesState extends State<FavouritePages> {
+  Timer? _debounce; // Khai báo biến Timer
+  final TextEditingController _searchController = TextEditingController();
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    _searchController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
       appBar: BasicAppBar(
-        hideBack: true,
-        hideSearch: false,
-        title: Text('My Favourite', style: TextStyle()),
+        // hideBack: true,
+        title: Text(
+          'My Favourite',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20, // Làm to tiêu đề cho đẹp
+            color: (context.isDarkMode) ? Color(0xFFDBDBDB) : Colors.black,
+          ),
+        ),
       ),
-      body: BlocProvider.value(
-        value: sl<FavouriteCubit>()..getFavourite(),
+      body: MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (_) => FavouriteCubit()..getFavourite()),
+          BlocProvider(create: (_) => SearchFavouriteCubit()),
+        ],
         child: BlocConsumer<FavouriteCubit, FavouriteState>(
           builder: (context, state) {
             if (state is FavouriteLoading) {
@@ -33,60 +63,141 @@ class FavouritePages extends StatelessWidget {
               );
             }
             if (state is FavouriteLoaded) {
-              final List<SongEntity> songs = state.list ?? [];
+              final List<SongEntity> defaultSongs = state.list ?? [];
 
-              if (songs.isEmpty) {
+              if (defaultSongs.isEmpty) {
                 return const Center(
                   child: Text('Danh sách yêu thích đang trống.'),
                 );
               }
+              return Column(
+                children: [
+                  _search(context),
+                  BlocBuilder<SearchFavouriteCubit, SearchFavouriteState>(
+                    builder: (context, state) {
+                      if (state is SearchFavouriteLoading) {
+                        return Center(child: CircleProcess());
+                      }
+                      if (state is SearchFavouriteFailure) {
+                        return Center(child: Text(state.errorMessage!));
+                      }
+                      if (state is SearchFavouriteSuccess) {
+                        List<SongEntity> songSearch = state.listSongs!;
+                        return Expanded(
+                          child: ListView.builder(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            itemCount: songSearch.length,
+                            itemBuilder: (context, index) {
+                              return SongListTail(
+                                context: context,
+                                song: songSearch[index],
+                                playlist: songSearch,
+                                action: IconButton(
+                                  onPressed: () {
+                                    showModalBottomSheet(
+                                      context: context,
+                                      builder: (bottomSheetContext) {
+                                        return Container(
+                                          width: double.infinity,
+                                          // height: 100,
+                                          child: Column(
+                                            spacing: 16,
+                                            children: [
+                                              _bottomSheetAction(
+                                                Icon(
+                                                  Icons.download_done_outlined,
+                                                ),
+                                                'Dowload',
+                                                () {},
+                                              ),
+                                              _bottomSheetAction(
+                                                Icon(Icons.delete_outline),
+                                                'Remove',
+                                                () async {
+                                                  Navigator.pop(
+                                                    bottomSheetContext,
+                                                  ); // đóng bottom sheet trước
 
-              return ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                itemCount: songs.length,
-                itemBuilder: (context, index) {
-                  return SongListTail(
-                    context: context,
-                    song: songs[index],
-                    action: IconButton(
-                      onPressed: () {
-                        showModalBottomSheet(
-                          context: context,
-                          builder: (bottomSheetContext) {
-                            return Container(
-                              width: double.infinity,
-                              // height: 100,
-                              child: Column(
-                                spacing: 16,
-                                children: [
-                                  _bottomSheetAction(
-                                    Icon(Icons.download_done_outlined),
-                                    'Dowload',
-                                    () {},
-                                  ),
-                                  _bottomSheetAction(
-                                    Icon(Icons.delete_outline),
-                                    'Remove',
-                                    () async {
-                                      Navigator.pop(
-                                        bottomSheetContext,
-                                      ); // đóng bottom sheet trước
+                                                  await context
+                                                      .read<FavouriteCubit>()
+                                                      .removeFavourite(
+                                                        defaultSongs[index].id,
+                                                      );
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
+                                  icon: const Icon(Icons.more_horiz_outlined),
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      }
+                      return Expanded(
+                        child: ListView.builder(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          itemCount: defaultSongs.length,
+                          itemBuilder: (context, index) {
+                            return SongListTail(
+                              context: context,
+                              song: defaultSongs[index],
+                              playlist: defaultSongs,
+                              action: IconButton(
+                                onPressed: () {
+                                  showModalBottomSheet(
+                                    context: context,
+                                    builder: (bottomSheetContext) {
+                                      return Container(
+                                        width: double.infinity,
+                                        decoration: BoxDecoration(
+                                          color: context.isDarkMode ? AppColors.lightBackground : AppColors.grayDark
+                                        ),
+                                        // height: 100,
+                                        child: Column(
+                                          spacing: 16,
+                                          children: [
+                                            _bottomSheetAction(
+                                              Icon(
+                                                Icons.download_done_outlined,
+                                              ),
+                                              'Dowload',
+                                              () {},
+                                            ),
+                                            _bottomSheetAction(
+                                              Icon(Icons.delete_outline),
+                                              'Remove',
+                                              () async {
+                                                Navigator.pop(
+                                                  bottomSheetContext,
+                                                ); // đóng bottom sheet trước
 
-                                      await context
-                                          .read<FavouriteCubit>()
-                                          .removeFavourite(songs[index].id);
+                                                await context
+                                                    .read<FavouriteCubit>()
+                                                    .removeFavourite(
+                                                      defaultSongs[index].id,
+                                                    );
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      );
                                     },
-                                  ),
-                                ],
+                                  );
+                                },
+                                icon: const Icon(Icons.more_horiz_outlined),
                               ),
                             );
                           },
-                        );
-                      },
-                      icon: const Icon(Icons.more_horiz_outlined),
-                    ),
-                  );
-                },
+                        ),
+                      );
+                    },
+                  ),
+                ],
               );
             }
             return const Center(child: Text('Unknown state'));
@@ -97,9 +208,8 @@ class FavouritePages extends StatelessWidget {
                 content: Text('Remove song from favourite successfully'),
               );
               ScaffoldMessenger.of(context).showSnackBar(snackbar);
-            }
-            else if(state is FavouriteRemoveFailure){
-                var snackbar = new SnackBar(
+            } else if (state is FavouriteRemoveFailure) {
+              var snackbar = new SnackBar(
                 content: Text('Remove song from favourite failure'),
               );
               ScaffoldMessenger.of(context).showSnackBar(snackbar);
@@ -128,6 +238,65 @@ class FavouritePages extends StatelessWidget {
             children: [leadIcon ?? Container(), Text(title ?? 'No action')],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _search(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 16.0,
+        vertical: 12.0,
+      ), // Cách đều 2 bên lề
+      child: TextField(
+        controller: _searchController,
+        style: const TextStyle(color: Colors.white), // Màu chữ khi gõ
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: Colors.grey[900], // Nền xám đen giống Spotify
+          hintText: 'Search for artists, songs...',
+          hintStyle: const TextStyle(color: Colors.white54, fontSize: 16),
+          prefixIcon: const Icon(
+            Icons.search,
+            color: Colors.white54,
+            size: 28,
+          ), // Icon kính lúp ở đầu
+          // Nút xóa ở cuối ô tìm kiếm (chỉ hiển thị khi có text)
+          suffixIcon: ValueListenableBuilder<TextEditingValue>(
+            valueListenable: _searchController,
+            builder: (context, value, child) {
+              if (value.text.isEmpty) return const SizedBox.shrink();
+              return IconButton(
+                icon: const Icon(Icons.clear, color: Colors.white54),
+                onPressed: () {
+                  _searchController.clear();
+                  context.read<SearchFavouriteCubit>().searchSongInFavourite(
+                    '',
+                  );
+                },
+              );
+            },
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8.0), // Bo tròn nhẹ 4 góc
+            borderSide: BorderSide.none, // Xóa viền bao quanh
+          ),
+          contentPadding: const EdgeInsets.symmetric(
+            vertical: 14.0,
+          ), // Căn giữa chữ và icon theo chiều dọc
+        ),
+        onChanged: (value) {
+          // 1. Hủy bỏ cái hẹn giờ cũ nếu người dùng vẫn đang gõ liên tục
+          if (_debounce?.isActive ?? false) {
+            _debounce!.cancel();
+          }
+
+          // 2. Thiết lập hẹn giờ mới: Chờ 500 mili-giây sau lần gõ phím cuối cùng
+          _debounce = Timer(const Duration(milliseconds: 1000), () {
+            // Gọi SearchSongCubit để tìm kiếm (hoặc reset nếu query rỗng)
+            context.read<SearchFavouriteCubit>().searchSongInFavourite(value);
+          });
+        },
       ),
     );
   }

@@ -3,12 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spotify_me/common/circle_process/circle_process.dart';
+import 'package:spotify_me/common/helpers/is_dark_mode.dart';
 import 'package:spotify_me/common/widgets/appbar/basic_appbar.dart';
 import 'package:spotify_me/common/widgets/song_list_tile/song_list_tail.dart';
 import 'package:spotify_me/domain/entities/song/song.dart';
 import 'package:spotify_me/presentation/explore/bloc/search_song_cubit.dart';
 import 'package:spotify_me/presentation/explore/bloc/search_song_state.dart';
-import 'package:spotify_me/presentation/favourite/bloc/favourite_cubit.dart';
+import 'package:spotify_me/presentation/favourite/bloc/favourite_crud/favourite_cubit.dart';
 import 'package:spotify_me/presentation/home/bloc/new_songs_cubit/news_song_state.dart';
 import 'package:spotify_me/presentation/home/bloc/new_songs_cubit/news_songs_cubit.dart';
 import 'package:spotify_me/service_locator.dart';
@@ -35,14 +36,20 @@ class _ExplorePagesState extends State<ExplorePages> {
     return SafeArea(
       child: Scaffold(
         appBar: BasicAppBar(
-          title: Text('Explore'),
-          hideBack: true,
-          hideSearch: true,
+          title: Text(
+            'Explore',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 20, // Làm to tiêu đề cho đẹp
+              color: (context.isDarkMode) ? Color(0xFFDBDBDB) : Colors.black,
+            ),
+          ),
+          // hideBack: true,
         ),
         body: MultiBlocProvider(
           providers: [
             BlocProvider(create: (_) => NewsSongsCubit()..getNewsSongs()),
-            BlocProvider(create: (_) => SearchSongCubit())
+            BlocProvider(create: (_) => SearchSongCubit()),
           ],
           child: BlocBuilder<NewsSongsCubit, NewsSongState>(
             builder: (context, state) {
@@ -87,7 +94,10 @@ class _ExplorePagesState extends State<ExplorePages> {
                               return const Center(
                                 child: Text(
                                   'Không tìm thấy bài hát nào.',
-                                  style: TextStyle(color: Colors.white54, fontSize: 16),
+                                  style: TextStyle(
+                                    color: Colors.white54,
+                                    fontSize: 16,
+                                  ),
                                 ),
                               );
                             }
@@ -96,7 +106,11 @@ class _ExplorePagesState extends State<ExplorePages> {
                               itemCount: searchResults.length,
                               itemBuilder: (context, index) {
                                 SongEntity song = searchResults[index];
-                                return SongListTail(context: context, song: song);
+                                return SongListTail(
+                                  context: context,
+                                  song: song,
+                                  playlist: searchResults,
+                                );
                               },
                             );
                           }
@@ -107,7 +121,11 @@ class _ExplorePagesState extends State<ExplorePages> {
                             itemCount: defaultSongs.length,
                             itemBuilder: (context, index) {
                               SongEntity song = defaultSongs[index];
-                              return SongListTail(context: context, song: song);
+                              return SongListTail(
+                                context: context,
+                                song: song,
+                                playlist: defaultSongs,
+                              );
                             },
                           );
                         },
