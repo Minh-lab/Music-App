@@ -151,31 +151,38 @@ class _FavouritePagesState extends State<FavouritePages> {
                                 onPressed: () {
                                   showModalBottomSheet(
                                     context: context,
+                                    backgroundColor: context.isDarkMode
+                                        ? AppColors.grayDark
+                                        : AppColors.lightBackground,
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(20),
+                                      ),
+                                    ),
                                     builder: (bottomSheetContext) {
-                                      return Container(
+                                      return SizedBox(
                                         width: double.infinity,
-                                        decoration: BoxDecoration(
-                                          color: context.isDarkMode ? AppColors.lightBackground : AppColors.grayDark
-                                        ),
-                                        // height: 100,
                                         child: Column(
-                                          spacing: 16,
+                                          // 3. QUAN TRỌNG: Giúp Bottom Sheet tự động co lại cho vừa khít nội dung, không bị kéo dài lê thê
+                                          mainAxisSize: MainAxisSize.min,
                                           children: [
+                                            const SizedBox(
+                                              height: 16,
+                                            ), // Cách lề trên một chút cho thoáng
                                             _bottomSheetAction(
-                                              Icon(
+                                              const Icon(
                                                 Icons.download_done_outlined,
                                               ),
-                                              'Dowload',
+                                              'Download',
                                               () {},
                                             ),
                                             _bottomSheetAction(
-                                              Icon(Icons.delete_outline),
+                                              const Icon(Icons.delete_outline),
                                               'Remove',
                                               () async {
                                                 Navigator.pop(
                                                   bottomSheetContext,
                                                 ); // đóng bottom sheet trước
-
                                                 await context
                                                     .read<FavouriteCubit>()
                                                     .removeFavourite(
@@ -183,6 +190,9 @@ class _FavouritePagesState extends State<FavouritePages> {
                                                     );
                                               },
                                             ),
+                                            const SizedBox(
+                                              height: 24,
+                                            ), // Cách lề dưới cùng (rất cần thiết trên iPhone dính thanh Home Indicator)
                                           ],
                                         ),
                                       );

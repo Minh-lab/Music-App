@@ -8,6 +8,7 @@ import 'package:spotify_me/domain/entities/auth/user.dart';
 import 'package:spotify_me/presentation/auth/pages/signup_or_signin.dart';
 import 'package:spotify_me/presentation/profile/bloc/logout_cubit.dart';
 import 'package:spotify_me/presentation/profile/bloc/logout_state.dart';
+import 'package:spotify_me/presentation/profile/pages/edit_profile.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class Profile extends StatelessWidget {
@@ -70,7 +71,12 @@ class Profile extends StatelessWidget {
                   Icon(Icons.edit_outlined, size: 30),
                   'Edit Profile',
                   Icon(Icons.arrow_forward_ios_outlined),
-                  () {},
+                  () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => EditProfile()),
+                    );
+                  },
                 ),
                 _action(
                   context,

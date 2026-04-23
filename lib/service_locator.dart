@@ -1,15 +1,20 @@
 import 'package:get_it/get_it.dart';
 import 'package:spotify_me/data/repositories/artists/artists_repository_iml.dart';
+import 'package:spotify_me/data/repositories/user/user_repository_iml.dart';
 import 'package:spotify_me/data/source/artists/artists_itunes_service.dart';
 import 'package:spotify_me/data/source/artists/artists_service.dart';
 import 'package:spotify_me/data/source/song/song_itunes_service.dart';
+import 'package:spotify_me/data/source/user/user_service.dart';
+import 'package:spotify_me/data/source/user/user_supabase_service_iml.dart';
 import 'package:spotify_me/domain/repositories/artists/artists_repository.dart';
+import 'package:spotify_me/domain/repositories/user_repository/user_repository.dart';
 import 'package:spotify_me/domain/usecases/artists/get_artists.dart';
 import 'package:spotify_me/domain/usecases/artists/get_artists_by_id.dart';
 import 'package:spotify_me/domain/usecases/auth/logout.dart';
 import 'package:spotify_me/domain/usecases/favourite/is_song_in_favourite.dart';
 import 'package:spotify_me/domain/usecases/favourite/remove_song_favourite.dart';
 import 'package:spotify_me/domain/usecases/favourite/search_songs_in_favourite.dart';
+import 'package:spotify_me/domain/usecases/profile/get_profile_usecase.dart';
 import 'package:spotify_me/domain/usecases/song/search_song.dart';
 import 'package:spotify_me/presentation/favourite/bloc/favourite_crud/favourite_cubit.dart';
 import 'package:spotify_me/data/repositories/auth/auth_repository_impl.dart';
@@ -39,6 +44,7 @@ final sl = GetIt.instance;
 Future<void> initializeDependencies() async {
   sl.registerSingleton<AuthService>(AuthSupabaseServiceImpl());
   sl.registerSingleton<ArtistsService>(ArtistsItunesService());
+  sl.registerSingleton<UserService>(UserSupabaseServiceIml());
   sl.registerSingleton<SongService>(SongItunesService());
   sl.registerSingleton<FavouriteService>(FavouriteSupabaseIml());
   sl.registerSingleton<AuthRepository>(AuthRepositoryImpl());
@@ -53,12 +59,16 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<RemoveSongFavouriteUsecase>(
     RemoveSongFavouriteUsecase(),
   );
+  sl.registerSingleton<GetProfileUsecase>(GetProfileUsecase());
   sl.registerSingleton<IsSongInFavouriteUsecase>(IsSongInFavouriteUsecase());
-  sl.registerSingleton<SearchSongsInFavouriteUsecase>(SearchSongsInFavouriteUsecase());
+  sl.registerSingleton<SearchSongsInFavouriteUsecase>(
+    SearchSongsInFavouriteUsecase(),
+  );
   sl.registerSingleton<GetArtistsUsecase>(GetArtistsUsecase());
   sl.registerSingleton<GetArtistsByIdUsecase>(GetArtistsByIdUsecase());
   sl.registerSingleton<SupabaseClient>(Supabase.instance.client);
   sl.registerSingleton<FavouriteRepository>(FavouriteRepositoryIml());
+  sl.registerSingleton<UserRopository>(UserRepositoryIml());
   sl.registerLazySingleton<FavouriteCubit>(() => FavouriteCubit());
   sl.registerLazySingleton<PlaySongCubit>(() => PlaySongCubit());
   sl.registerFactory<SongFavouriteCubit>(() => SongFavouriteCubit());
