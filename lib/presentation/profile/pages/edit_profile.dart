@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spotify_me/common/helpers/is_dark_mode.dart';
 import 'package:spotify_me/common/widgets/appbar/basic_appbar.dart';
+import 'package:spotify_me/data/models/user/user_update_request.dart';
 import 'package:spotify_me/domain/entities/auth/user.dart';
 import 'package:spotify_me/domain/entities/song/song.dart';
 import 'package:spotify_me/domain/usecases/profile/get_profile_usecase.dart';
+import 'package:spotify_me/domain/usecases/profile/update_profile.dart';
+import 'package:spotify_me/presentation/profile/bloc/profile/profile_cubit.dart';
+import 'package:spotify_me/presentation/profile/bloc/profile/profile_state.dart';
 import 'package:spotify_me/service_locator.dart';
 // import 'package:spotify_me/core/configs/theme/app_colors.dart'; // Mở comment nếu cần dùng AppColors cho nút Save
 
@@ -17,12 +22,12 @@ class EditProfile extends StatefulWidget {
 }
 
 class EditProfileState extends State<EditProfile> {
+  final _formKey = GlobalKey<FormState>();
   TextEditingController fullNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
 
   @override
   void dispose() {
-    // Luôn nhớ dispose controller để tránh tràn bộ nhớ
     fullNameController.dispose();
     emailController.dispose();
     super.dispose();
@@ -43,35 +48,78 @@ class EditProfileState extends State<EditProfile> {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          // Thêm cuộn để tránh lỗi tràn bàn phím khi gõ
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 30),
-          child: Column(
-            children: [
-              _avatarEdit(context),
-              const SizedBox(height: 50),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                _avatarEdit(context),
+                const SizedBox(height: 50),
 
-              // Sử dụng lại hàm _textField cho nhiều ô nhập liệu khác nhau
-              _textField(context, fullNameController, 'Full Name'),
-              const SizedBox(height: 50),
-              _textField(context, emailController, 'Email'),
-              const SizedBox(height: 20),
-
-              const SizedBox(height: 60),
-              _saveButton(context, () async {
-                var result = await sl<GetProfileUsecase>().call();
-                result.fold(
-                  (l) {
-                    print(l.toString());
+                _textField(
+                  context,
+                  fullNameController,
+                  'Full Name',
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Full name cannot be empty';
+                    }
+                    return null;
                   },
-                  (r) {
-                    if(r is UserEntity){
-                      print(r.email);
-                      print(r.fullName);
+                ),
+                const SizedBox(height: 50),
+                _textField(
+                  context,
+                  emailController,
+                  'Email',
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Email cannot be empty';
+                    }
+                    final emailRegex = RegExp(
+                      r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                    );
+                    if (!emailRegex.hasMatch(value)) {
+                      return 'Please enter a valid email';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+
+                const SizedBox(height: 60),
+                BlocConsumer<ProfileCubit, ProfileState>(
+                  builder: (context, state) {
+                    return _saveButton(context, () async {
+                      if (_formKey.currentState?.validate() ?? false) {
+                        await context.read<ProfileCubit>().updateProfile(
+                          UserUpdateRequest(
+                            name: fullNameController.text.toString(),
+                            email: emailController.text.toString(),
+                          ),
+                        );
+                      }
+                    });
+                  },
+                  listener: (context, state) {
+                    if (state is UpdateProfileFailure) {
+                      var snackBar = SnackBar(
+                        content: Text(state.errorMessage ?? 'Error unknown'),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    }
+                    if (state is UpdateProfileSuccess) {
+                      var snackBar = const SnackBar(
+                        content: Text('Update profile successfully'),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      context.read<ProfileCubit>().getProfile();
+                      Navigator.pop(context);
                     }
                   },
-                );
-              }),
-            ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -138,8 +186,9 @@ class EditProfileState extends State<EditProfile> {
   Widget _textField(
     BuildContext context,
     TextEditingController controller,
-    String label,
-  ) {
+    String label, {
+    String? Function(String?)? validator,
+  }) {
     bool isDark = context.isDarkMode;
 
     // Khai báo màu động
@@ -148,8 +197,9 @@ class EditProfileState extends State<EditProfile> {
     Color enabledBorderColor = isDark ? Colors.white30 : Colors.black38;
     Color focusedBorderColor = isDark ? Colors.white : Colors.black;
 
-    return TextField(
+    return TextFormField(
       controller: controller,
+      validator: validator,
       style: TextStyle(color: textColor, fontSize: 16),
       decoration: InputDecoration(
         labelText: label, // Dùng biến label truyền vào

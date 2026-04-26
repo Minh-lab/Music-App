@@ -7,6 +7,6 @@ class GetProfileUsecase extends UseCase<Either, dynamic> {
   @override
   Future<Either<dynamic, dynamic>> call({params}) async {
     // TODO: implement call
-    return await sl<UserRopository>().getUser();
+    return await sl<UserRepository>().getUser();
   }
 }

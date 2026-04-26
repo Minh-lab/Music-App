@@ -7,6 +7,6 @@ class UpdateProfileUsecase extends UseCase<Either, dynamic> {
   @override
   Future<Either<dynamic, dynamic>> call({params}) async {
     // TODO: implement call
-    return await sl<UserRopository>().updateUser(params);
+    return await sl<UserRepository>().updateUser(params);
   }
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:spotify_me/common/helpers/is_dark_mode.dart';
 import 'package:spotify_me/domain/entities/song/song.dart';
-import 'package:spotify_me/presentation/home/widgets/PlaySongPages/pages/play_song.dart';
+import 'package:spotify_me/presentation/home/widgets/playsong/pages/play_song_controller.dart';
 
 Widget PlaySongButton(
   BuildContext context,
@@ -14,7 +14,7 @@ Widget PlaySongButton(
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => PlaySong(songEntity: song, playlist: songs),
+          builder: (context) => PlaySongController(songEntity: song, playlist: songs),
         ),
       );
     },

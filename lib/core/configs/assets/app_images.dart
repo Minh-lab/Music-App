@@ -6,5 +6,4 @@ class AppImages {
   static final String authBG = '$basePath/auth_bg$format';
   static final String homeArtist = '$basePath/home_artist$format';
   static final String avartar = '$basePath/avartar$format';
-  
 }

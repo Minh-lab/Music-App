@@ -32,6 +32,7 @@ class _FavouritePagesState extends State<FavouritePages> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+    print('rebuld');
     return Scaffold(
       appBar: BasicAppBar(
         // hideBack: true,
@@ -46,13 +47,14 @@ class _FavouritePagesState extends State<FavouritePages> {
       ),
       body: MultiBlocProvider(
         providers: [
-          BlocProvider(create: (_) => FavouriteCubit()..getFavourite()),
+          BlocProvider.value(value: sl<FavouriteCubit>()..getFavourite()),
           BlocProvider(create: (_) => SearchFavouriteCubit()),
         ],
         child: BlocConsumer<FavouriteCubit, FavouriteState>(
           builder: (context, state) {
+            // context.read<FavouriteCubit>().getFavourite();
             if (state is FavouriteLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return CircleProcess();
             }
             if (state is FavouriteFailure) {
               return const Center(
@@ -121,7 +123,7 @@ class _FavouritePagesState extends State<FavouritePages> {
                                                   await context
                                                       .read<FavouriteCubit>()
                                                       .removeFavourite(
-                                                        defaultSongs[index].id,
+                                                        songSearch[index].id,
                                                       );
                                                 },
                                               ),
@@ -218,6 +220,13 @@ class _FavouritePagesState extends State<FavouritePages> {
                 content: Text('Remove song from favourite successfully'),
               );
               ScaffoldMessenger.of(context).showSnackBar(snackbar);
+
+              // Nếu đang tìm kiếm thì phải refresh lại danh sách tìm kiếm để cập nhật UI, bắt tìm kiếm lại(refesh)
+              if (_searchController.text.isNotEmpty) {
+                context.read<SearchFavouriteCubit>().searchSongInFavourite(
+                  _searchController.text,
+                );
+              }
             } else if (state is FavouriteRemoveFailure) {
               var snackbar = new SnackBar(
                 content: Text('Remove song from favourite failure'),

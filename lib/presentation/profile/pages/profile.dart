@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spotify_me/common/circle_process/circle_process.dart';
 import 'package:spotify_me/common/helpers/is_dark_mode.dart';
 import 'package:spotify_me/common/widgets/appbar/basic_appbar.dart';
 import 'package:spotify_me/core/configs/assets/app_images.dart';
 import 'package:spotify_me/core/configs/theme/app_colors.dart';
 import 'package:spotify_me/domain/entities/auth/user.dart';
 import 'package:spotify_me/presentation/auth/pages/signup_or_signin.dart';
-import 'package:spotify_me/presentation/profile/bloc/logout_cubit.dart';
-import 'package:spotify_me/presentation/profile/bloc/logout_state.dart';
+import 'package:spotify_me/presentation/profile/bloc/logout/logout_cubit.dart';
+import 'package:spotify_me/presentation/profile/bloc/logout/logout_state.dart';
+import 'package:spotify_me/presentation/profile/bloc/profile/profile_cubit.dart';
+import 'package:spotify_me/presentation/profile/bloc/profile/profile_state.dart';
 import 'package:spotify_me/presentation/profile/pages/edit_profile.dart';
+import 'package:spotify_me/service_locator.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class Profile extends StatelessWidget {
@@ -27,9 +31,28 @@ class Profile extends StatelessWidget {
         ),
       ),
 
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: Column(children: [_userInformation(context, UserEntity())]),
+      body: SingleChildScrollView(
+        child: BlocProvider(
+          create: (context) => sl<ProfileCubit>()..getProfile(),
+
+          child: Column(
+            children: [
+              BlocBuilder<ProfileCubit, ProfileState>(
+                builder: (context, state) {
+                  if (state is GetProfileLoading)
+                    return Center(child: CircleProcess());
+                  if (state is GetProfileFailure) {
+                    return Center(child: Text('Get profile failure'));
+                  }
+                  if (state is GetProfileSuccess) {
+                    return _userInformation(context, state.user!);
+                  }
+                  return Container();
+                },
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -46,12 +69,14 @@ class Profile extends StatelessWidget {
               shape: BoxShape.circle,
               color: Color(0xFFD9D9D9),
               border: Border.all(
-                width: 2,
+                width: 1,
                 color: context.isDarkMode ? Colors.transparent : Colors.black,
               ),
             ),
             child: ClipOval(
-              child: Image.asset(AppImages.avartar, fit: BoxFit.cover),
+              child: user.avatar != null && user.avatar!.isNotEmpty
+                  ? Image.network(user.avatar!, fit: BoxFit.cover)
+                  : Image.asset(AppImages.avartar, fit: BoxFit.cover),
             ),
           ),
           SizedBox(height: 12),
@@ -72,9 +97,15 @@ class Profile extends StatelessWidget {
                   'Edit Profile',
                   Icon(Icons.arrow_forward_ios_outlined),
                   () {
+                    final cubit = context.read<ProfileCubit>();
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => EditProfile()),
+                      MaterialPageRoute(
+                        builder: (context) => BlocProvider.value(
+                          value: cubit,
+                          child: const EditProfile(),
+                        ),
+                      ),
                     );
                   },
                 ),
@@ -94,23 +125,38 @@ class Profile extends StatelessWidget {
                 ),
                 BlocProvider(
                   create: (_) => LogoutCubit(),
-                  child: BlocBuilder<LogoutCubit, LogoutState>(
+                  child: BlocConsumer<LogoutCubit, LogoutState>(
+                    listener: (context, state) {
+                      if (state is LogoutSuccess) {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SignupOrSigninPage(),
+                          ),
+                          (route) => false,
+                        );
+                      } else if (state is LogoutFailure) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Logout failed')),
+                        );
+                      }
+                    },
                     builder: (context, state) {
+                      if (state is LogoutLoading) {
+                        return Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(20.0),
+                            child: CircleProcess(),
+                          ),
+                        );
+                      }
                       return _action(
                         context,
                         Icon(Icons.lock_outline_rounded, size: 30),
                         'Logout',
                         Icon(Icons.arrow_forward_ios_outlined),
-                        () {
+                        () async {
                           context.read<LogoutCubit>().logout();
-                          Future.delayed(Duration(seconds: 2));
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SignupOrSigninPage(),
-                            ),
-                            (route) => false,
-                          );
                         },
                       );
                     },

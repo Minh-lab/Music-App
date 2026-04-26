@@ -4,11 +4,12 @@ class UserEntity {
   String? userId;
   String? fullName;
   String? email;
-  UserEntity({this.userId, this.fullName, this.email});
+  String? avatar;
+  UserEntity({this.userId, this.fullName, this.email, this.avatar});
 }
 
 extension ToUserModel on UserEntity {
   UserModel toUserModel() {
-    return UserModel(id: userId!, name: fullName!, email: email!);
+    return UserModel(id: userId!, name: fullName!, email: email!, avatar: avatar);
   }
 }
