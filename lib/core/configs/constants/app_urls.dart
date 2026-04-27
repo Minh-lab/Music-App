@@ -1,7 +1,6 @@
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AppUrls {
-  static const supabaseCoversStorage = 'https://remuryqmfmlqmmpqzbhc.supabase.co/storage/v1/object/public/covers';
-  static const supabaseSongsStorage = 'https://remuryqmfmlqmmpqzbhc.supabase.co/storage/v1/object/public/songs';
-   
+  static String get supabaseCoversStorage => '${dotenv.env['SUPABASE_URL']}/storage/v1/object/public/covers';
+  static String get supabaseSongsStorage => '${dotenv.env['SUPABASE_URL']}/storage/v1/object/public/songs';
 }
