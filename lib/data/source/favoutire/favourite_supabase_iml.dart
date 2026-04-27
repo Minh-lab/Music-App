@@ -61,10 +61,10 @@ class FavouriteSupabaseIml extends FavouriteService {
         return const Left('User not login');
       }
       // Dùng match đảm bảo xoá bằng chính xác tổ hợp song_id và user_id
-      await sl<SupabaseClient>()
-          .from('favourites')
-          .delete()
-          .match({'song_id': songId, 'user_id': userId});
+      await sl<SupabaseClient>().from('favourites').delete().match({
+        'song_id': songId,
+        'user_id': userId,
+      });
       return const Right('Remove song from favourite successfully');
     } catch (e) {
       print(e.toString());
@@ -92,5 +92,31 @@ class FavouriteSupabaseIml extends FavouriteService {
     }
   }
 
-  
+  @override
+  Future<Either<dynamic, dynamic>> searchSongInFavourite(String query) async {
+    // TODO: implement searchSongInFavourite
+    try {
+      final userId = sl<SupabaseClient>().auth.currentUser?.id;
+      if (userId == null) {
+        return const Left('User not login');
+      }
+      var result = await sl<SupabaseClient>()
+          .from('favourites')
+          .select('*, songs!inner(*)')
+          .eq('user_id', userId)
+          // .ilike('songs.title', '%$query%');
+          .or(
+            'title.ilike.%$query%,artist.ilike.%$query%',
+            referencedTable: 'songs',
+          );
+
+      // print(
+      //   result.map((e) => SongModel.fromJson(e['songs']).toEntity() ).toList(),
+      // );
+      return Right(result.map((e) => SongModel.fromJson(e['songs']).toEntity()).toList());
+    } catch (e) {
+      print(e.toString());
+      return Left(e.toString());
+    }
+  }
 }

@@ -8,10 +8,12 @@ import 'package:spotify_me/presentation/home/widgets/play_song_button.dart';
 class SongListTail extends StatelessWidget {
   BuildContext context;
   SongEntity song;
+  List<SongEntity> playlist;
   Widget? action;
   SongListTail({
     required this.context,
     required this.song,
+    required this.playlist,
     this.action,
     super.key,
   });
@@ -22,7 +24,7 @@ class SongListTail extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => PlaySong(songEntity: song)),
+          MaterialPageRoute(builder: (context) => PlaySong(songEntity: song, playlist: playlist,)),
         );
       },
       child: Container(

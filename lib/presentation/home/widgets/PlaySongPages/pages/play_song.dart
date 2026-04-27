@@ -6,8 +6,8 @@ import 'package:spotify_me/common/widgets/appbar/basic_appbar.dart';
 import 'package:spotify_me/core/configs/theme/app_colors.dart';
 import 'package:spotify_me/domain/entities/song/song.dart';
 import 'package:spotify_me/domain/usecases/favourite/is_song_in_favourite.dart';
-import 'package:spotify_me/presentation/favourite/bloc/favourite_cubit.dart';
-import 'package:spotify_me/presentation/favourite/bloc/favourite_state.dart'
+import 'package:spotify_me/presentation/favourite/bloc/favourite_crud/favourite_cubit.dart';
+import 'package:spotify_me/presentation/favourite/bloc/favourite_crud/favourite_state.dart'
     hide SongInFavourite;
 import 'package:spotify_me/presentation/home/bloc/play_song_cubit/play_song_cubit.dart';
 import 'package:spotify_me/presentation/home/bloc/play_song_cubit/play_song_state.dart';
@@ -17,7 +17,8 @@ import 'package:spotify_me/service_locator.dart';
 
 class PlaySong extends StatelessWidget {
   SongEntity? songEntity;
-  PlaySong({this.songEntity, super.key});
+  List<SongEntity> playlist;
+  PlaySong({this.songEntity, required this.playlist, super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,6 +33,12 @@ class PlaySong extends StatelessWidget {
           ),
         ],
         child: BlocBuilder<PlaySongCubit, PlaySongState>(
+          buildWhen: (previous, current) {
+            return current is PlaySongStart ||
+                current is PlaySongPause ||
+                current is PlaySongInitial ||
+                current is PlaySongError;
+          },
           builder: (context, songState) {
             return SingleChildScrollView(
               child: Padding(
@@ -50,7 +57,10 @@ class PlaySong extends StatelessWidget {
                         Column(
                           crossAxisAlignment: .start,
                           children: [
-                            SizedBox(width: 350,child: _titleSong(context, songEntity!.title!)),
+                            SizedBox(
+                              width: 350,
+                              child: _titleSong(context, songEntity!.title!),
+                            ),
                             SizedBox(height: 8),
                             _artistSong(context, songEntity!.artist),
                           ],
@@ -59,15 +69,15 @@ class PlaySong extends StatelessWidget {
                           builder: (context, state) {
                             return _favouriteButton(state is SongInFavourite, () {
                               if (state is SongNotInFavourite) {
-                                context
-                                    .read<FavouriteCubit>()
-                                    .addFavourite(songEntity!.id);
+                                context.read<FavouriteCubit>().addFavourite(
+                                  songEntity!.id,
+                                );
                               } else if (state is SongInFavourite) {
-                                context
-                                    .read<FavouriteCubit>()
-                                    .removeFavourite(songEntity!.id);
+                                context.read<FavouriteCubit>().removeFavourite(
+                                  songEntity!.id,
+                                );
                               }
-                           
+
                               // Dùng toggle để cập nhật giao diện (màu nút) tức thời ngầm!
                               context
                                   .read<SongFavouriteCubit>()
@@ -80,18 +90,74 @@ class PlaySong extends StatelessWidget {
                     _sliderPlay(context),
                     // more action button
                     SizedBox(height: 20),
-                    Row(
-                      spacing: 20,
-                      mainAxisAlignment: .center,
+                    Stack(
                       children: [
-                        _previousSongButton(context, () {}),
-                        _playSongButton(songState, () async {
-                          print(songState.toString());
-                          context.read<PlaySongCubit>().playOrPause(
-                            songEntity!.audioUrl!,
-                          );
-                        }),
-                        _nextSongButton(context, () {}),
+                        Row(
+                          spacing: 10,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            _previousSongButton(context, () {
+                              int indexPrevious = 0;
+                              int indexCurrent = playlist.indexOf(songEntity!);
+                              if (indexCurrent >= 1 &&
+                                  indexCurrent <= playlist.length - 1) {
+                                indexPrevious = indexCurrent - 1;
+                              }
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => PlaySong(
+                                    playlist: playlist,
+                                    songEntity: playlist[indexPrevious],
+                                  ),
+                                ),
+                              );
+                            }),
+
+                            _playSongButton(songState, () async {
+                              final cubit = context.read<PlaySongCubit>();
+                              // Chỉ set playlist khi chưa có bài (lần đầu bấm Play)
+                              if (cubit.currentSong == null) {
+                                int index = playlist.indexOf(songEntity!);
+                                cubit.playList(playlist, index);
+                              }
+                              await cubit.playOrPause();
+                            }),
+                            _nextSongButton(context, () {
+                              int indexNext = 0;
+                              int indexCurrent = playlist.indexOf(songEntity!);
+                              if (indexCurrent >= 0 &&
+                                  indexCurrent < playlist.length - 1) {
+                                indexNext = indexCurrent + 1;
+                              }
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => PlaySong(
+                                    playlist: playlist,
+                                    songEntity: playlist[indexNext],
+                                  ),
+                                ),
+                              );
+                            }),
+                          ],
+                        ),
+                        Positioned(
+                          bottom: 18,
+                          right: 2,
+                          child: BlocBuilder<PlaySongCubit, PlaySongState>(
+                            buildWhen: (previous, current) {
+                              return current is StartPlayLoop ||
+                                  current is StopPlayLoop;
+                            },
+                            builder: (context, state) {
+                              final bool isLoop = state is StartPlayLoop;
+                              return _loopSongButton(context, isLoop, () {
+                                context.read<PlaySongCubit>().playLoop();
+                              });
+                            },
+                          ),
+                        ),
                       ],
                     ),
                   ],
@@ -161,9 +227,6 @@ class PlaySong extends StatelessWidget {
     );
   }
 
-  // Hàm format thời gian mm:ss
-  
-
   Widget _titleSong(BuildContext context, String title) {
     return Text(
       title,
@@ -198,23 +261,24 @@ class PlaySong extends StatelessWidget {
   }
 
   Widget _playSongButton(PlaySongState state, VoidCallback onPressed) {
-    return  ElevatedButton(
-    onPressed: onPressed,
-    style: ElevatedButton.styleFrom(
-      backgroundColor: AppColors.primary, 
-      shape: const CircleBorder(), 
-      padding: const EdgeInsets.all(22),
-      elevation: 8, 
-      shadowColor: Colors.black.withValues(alpha: 0.5), 
-    ),
-    child: Icon(
-      (state is PlaySongStart)
-          ? Icons.pause_outlined
-          : Icons.play_arrow_outlined,
-      size: 50,
-      color: Colors.white,
-    ),
-  );
+    print(state);
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.primary,
+        shape: const CircleBorder(),
+        padding: const EdgeInsets.all(22),
+        elevation: 8,
+        shadowColor: Colors.black.withValues(alpha: 0.5),
+      ),
+      child: Icon(
+        (state is PlaySongStart)
+            ? Icons.pause_outlined
+            : Icons.play_arrow_outlined,
+        size: 50,
+        color: Colors.white,
+      ),
+    );
   }
 
   Widget _previousSongButton(BuildContext context, VoidCallback onPressed) {
@@ -235,6 +299,21 @@ class PlaySong extends StatelessWidget {
         Icons.skip_next_outlined,
         size: 40,
         color: context.isDarkMode ? Color(0XFFA7A7A7) : Color(0xFF363636),
+      ),
+    );
+  }
+
+  Widget _loopSongButton(
+    BuildContext context,
+    bool loopSong,
+    VoidCallback onPressed,
+  ) {
+    return IconButton(
+      onPressed: onPressed,
+      icon: Icon(
+        Icons.loop_outlined,
+        size: 40,
+        color: (loopSong) ? AppColors.primary : Colors.blueGrey,
       ),
     );
   }

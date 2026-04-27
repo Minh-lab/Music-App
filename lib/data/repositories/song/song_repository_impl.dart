@@ -1,6 +1,8 @@
 import 'package:dartz/dartz.dart';
+import 'package:spotify_me/data/source/favoutire/favourite_service.dart';
 import 'package:spotify_me/data/source/song/song_itunes_service.dart';
 import 'package:spotify_me/data/source/song/song_service.dart';
+import 'package:spotify_me/data/source/song/song_supabase_service.dart';
 import 'package:spotify_me/domain/repositories/song/song_repository.dart';
 import 'package:spotify_me/service_locator.dart';
 
@@ -20,5 +22,11 @@ class SongRepositoryImpl extends SongRepository {
   @override
   Future<Either<dynamic, dynamic>> searchSong(String query) async {
     return await sl<SongService>().searchSong(query);
+  }
+  
+  @override
+  Future<Either<dynamic, dynamic>> searchSongFavourite(String query) async {
+    // TODO: implement searchSongFavourite
+    return await sl<FavouriteService>().searchSongInFavourite(query);
   }
 }

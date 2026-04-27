@@ -17,7 +17,7 @@ class ArtistsPages extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: BasicAppBar(hideSearch: true),
+      appBar: BasicAppBar(),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: BlocProvider(
@@ -82,17 +82,11 @@ class ArtistsPages extends StatelessWidget {
       children: [
         Text(
           artist.name,
-          style: const TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-          ),
+          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
         ),
         Text(
           '${artist.track} Track${artist.track != 1 ? "s" : ""}',
-          style: const TextStyle(
-            fontSize: 14,
-            color: Colors.grey,
-          ),
+          style: const TextStyle(fontSize: 14, color: Colors.grey),
         ),
       ],
     );
@@ -115,7 +109,11 @@ class ArtistsPages extends StatelessWidget {
       physics: NeverScrollableScrollPhysics(),
       itemCount: listSongs.length,
       itemBuilder: (context, index) {
-        return SongListTail(context: context, song: listSongs[index]);
+        return SongListTail(
+          context: context,
+          song: listSongs[index],
+          playlist: listSongs,
+        );
       },
     );
   }

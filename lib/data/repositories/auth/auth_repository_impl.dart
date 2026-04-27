@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:spotify_me/data/models/auth/create_user_request.dart';
 import 'package:spotify_me/data/models/auth/signin_request.dart';
 import 'package:spotify_me/data/source/auth/auth_service.dart';
-import 'package:spotify_me/domain/repositories/auth/auth.dart';
+import 'package:spotify_me/domain/repositories/auth/auth_repository.dart';
 import 'package:spotify_me/service_locator.dart';
 
 class AuthRepositoryImpl extends AuthRepository {
@@ -22,5 +22,28 @@ class AuthRepositoryImpl extends AuthRepository {
   Future<Either<dynamic, dynamic>> logout() async {
     // TODO: implement logout
     return await sl<AuthService>().logout();
+  }
+
+  @override
+  Future<Either<dynamic, dynamic>> sendOtpResetPassword(String email) async {
+    // TODO: implement sendOtpResetPassword
+    return await sl<AuthService>().sendOtpResetPassword(email);
+  }
+
+  @override
+  Future<Either<dynamic, dynamic>> changePassword({
+    required String newPassword,
+  }) async {
+    // TODO: implement changePassword
+    return await sl<AuthService>().changePassword(newPassword: newPassword);
+  }
+
+  @override
+  Future<Either<dynamic, dynamic>> checkOtpResetPassword(
+    String email,
+    String otpCode,
+  ) async {
+    // TODO: implement checkOtpResetPassword
+    return await sl<AuthService>().checkOtpResetPassword(email, otpCode);
   }
 }

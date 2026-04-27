@@ -6,4 +6,12 @@ abstract class AuthRepository {
   Future<Either> signup(CreateUserRequest createUserReq);
   Future<Either> signin(SigninRequest signinRequest);
   Future<Either> logout();
+  Future<Either> sendOtpResetPassword(String email);
+  Future<Either> changePassword({
+    required String newPassword,
+  });
+  Future<Either<dynamic, dynamic>> checkOtpResetPassword(
+    String email,
+    String otpCode,
+  ) ;
 }
