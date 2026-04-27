@@ -6,4 +6,10 @@ abstract class AuthService {
   Future<Either> signin(SigninRequest signinRequest);
   Future<Either> logout();
   Future<Either> signup(CreateUserRequest createUserReq);
+  Future<Either> sendOtpResetPassword(String email);
+  Future<Either> changePassword({
+  
+    required String newPassword,
+  });
+  Future<Either> checkOtpResetPassword(String email, String otpCode);
 }

@@ -3,12 +3,14 @@ import 'package:spotify_me/core/configs/theme/app_colors.dart';
 
 class BasicAppButton extends StatelessWidget {
   final String title;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final double? height;
+  final double? width;
   const BasicAppButton({
     required this.title,
-    required this.onPressed,
+    this.onPressed,
     this.height,
+    this.width,
     super.key,
   });
   @override
@@ -17,11 +19,11 @@ class BasicAppButton extends StatelessWidget {
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primary,
-        minimumSize: Size.fromHeight(height ?? 80),
+        minimumSize: Size(width ?? double.infinity, height ?? 80),
       ),
       child: Text(
         title,
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 22,
           color: Colors.white,
           fontWeight: FontWeight.bold,
