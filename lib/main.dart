@@ -7,10 +7,14 @@ import 'package:spotify_me/core/configs/theme/app_theme.dart';
 import 'package:spotify_me/presentation/choose_mode/bloc/theme_cubit.dart';
 import 'package:spotify_me/presentation/splash/pages/splash.dart';
 import 'package:spotify_me/service_locator.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  await dotenv.load(fileName: ".env");
+
   late String storagePath;
   if (kIsWeb) {
     storagePath = ''; // Not used for web
@@ -31,9 +35,8 @@ Future<void> main() async {
   );
 
   await Supabase.initialize(
-    url:
-        'https://remuryqmfmlqmmpqzbhc.supabase.co', // TODO: Create and replace this with your project URL from Supabase dashboard
-    anonKey: 'sb_publishable_EwpcmPHBjtv080WsxQDyKw_n3S4lfK2',
+    url: dotenv.env['SUPABASE_URL']!,
+    anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
   );
 
   await initializeDependencies();
