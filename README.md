@@ -1,85 +1,92 @@
 # SpotifyMe
 
-SpotifyMe is a cross-platform music streaming application built with Flutter. It implements a modern, responsive user interface and follows Clean Architecture principles to ensure scalability, maintainability, and testability.
+SpotifyMe là ứng dụng nghe nhạc đa nền tảng được xây dựng bằng Flutter.  
+Dự án sử dụng Clean Architecture để đảm bảo khả năng mở rộng, dễ bảo trì và dễ kiểm thử.
+
+---
 
 ## Screenshots
 
-<table>
-  <tr>
-    <td align="center">
-      <b>Sign In</b><br>
-      <img src="screenshots/sign_in.png" width="200">
-    </td>
-    <td align="center">
-      <b>Register</b><br>
-      <img src="screenshots/register.png" width="200">
-    </td>
-    <td align="center">
-      <b>Forgot Password</b><br>
-      <img src="screenshots/forgot_password.png" width="200">
-    </td>
-    <td align="center">
-      <b>Home</b><br>
-      <img src="screenshots/home.jpg" width="200">
-    </td>
-    <td align="center">
-      <b>Explore</b><br>
-      <img src="screenshots/explore.png" width="200">
-    </td>
-    <td align="center">
-      <b>Favourite</b><br>
-      <img src="screenshots/favourite.png" width="200">
-    </td>
-    <td align="center">
-      <b>Profile</b><br>
-      <img src="screenshots/profile.png" width="200">
-    </td>
-    <td align="center">
-      <b>Now Playing</b><br>
-      <img src="screenshots/now_playing.jpg" width="200">
-    </td>
-  </tr>
-</table>
+### Authentication
+- **Sign In**  
+  ![](screenshots/sign_in.png)
+
+- **Register**  
+  ![](screenshots/register.png)
+
+- **Forgot Password**  
+  ![](screenshots/forgot_password.png)
+
+### Main Features
+- **Home**  
+  ![](screenshots/home.jpg)
+
+- **Explore**  
+  ![](screenshots/explore.png)
+
+- **Favourite**  
+  ![](screenshots/favourite.png)
+
+- **Profile**  
+  ![](screenshots/profile.png)
+
+- **Now Playing**  
+  ![](screenshots/now_playing.jpg)
+
+---
 
 ## Architecture
 
-This project strictly adheres to **Clean Architecture** patterns, separating concerns into three main layers:
+Dự án tuân theo mô hình Clean Architecture với 3 layer chính:
 
-- **Presentation**: UI components, pages, and state management using BLoC/Cubit.
-- **Domain**: Business logic, use cases, and repository interfaces.
-- **Data**: Data sources (remote/local), models, and repository implementations.
+- **Presentation**  
+  UI, màn hình, và quản lý state (BLoC/Cubit)
 
-State management is handled via `flutter_bloc` and dependency injection is provided by `get_it`.
+- **Domain**  
+  Business logic, use cases, repository interface
 
-## Technologies Used
+- **Data**  
+  Data source (remote/local), model, repository implementation
 
-- **Framework**: Flutter
-- **Language**: Dart
-- **State Management**: flutter_bloc, hydrated_bloc
-- **Backend & Authentication**: Supabase (supabase_flutter)
-- **Audio Playback**: just_audio, audio_service
-- **Dependency Injection**: get_it
-- **Functional Programming**: dartz (for Either monads in error handling)
+State management sử dụng `flutter_bloc`  
+Dependency injection sử dụng `get_it`
+
+---
+
+## Technologies
+
+- Flutter
+- Dart
+- flutter_bloc, hydrated_bloc
+- supabase_flutter
+- just_audio, audio_service
+- get_it
+- dartz
+
+---
 
 ## Features
 
-- User Authentication (Sign up, Sign in, Password Recovery via OTP).
-- Music streaming and audio playback controls.
-- Dynamic lyric synchronization.
-- Favorite tracks management.
-- Responsive and modern UI design.
+- Xác thực người dùng (đăng ký, đăng nhập, quên mật khẩu qua OTP)
+- Phát nhạc và điều khiển playback
+- Đồng bộ lời bài hát theo thời gian
+- Quản lý bài hát yêu thích
+- Giao diện responsive, hiện đại
+
+---
 
 ## Getting Started
 
 ### Prerequisites
 
-- [Flutter SDK](https://flutter.dev/docs/get-started/install) (v3.10.7 or higher)
-- [Dart SDK](https://dart.dev/get-dart)
-- A Supabase project for the backend.
+- Flutter SDK (>= 3.10.7)
+- Dart SDK
+- Supabase project
+
+---
 
 ### Installation
 
-1. Clone the repository:
-   ```bash
-   git clone [https://github.com/yourusername/spotify_me.git](https://github.com/yourusername/spotify_me.git)
-   cd spotify_me
+```bash
+git clone https://github.com/yourusername/spotify_me.git
+cd spotify_me
