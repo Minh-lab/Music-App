@@ -13,7 +13,6 @@ class OtpSendFailure extends OtpState {
   OtpSendFailure({this.errorMessage});
 }
 
-// Thêm class này vào file state của bạn
 class OtpCountdown extends OtpState {
   final int seconds;
   OtpCountdown(this.seconds);

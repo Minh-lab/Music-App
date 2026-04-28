@@ -20,7 +20,7 @@ class FavouritePages extends StatefulWidget {
 }
 
 class _FavouritePagesState extends State<FavouritePages> {
-  Timer? _debounce; // Khai báo biến Timer
+  Timer? _debounce;
   final TextEditingController _searchController = TextEditingController();
   @override
   void dispose() {
@@ -31,15 +31,13 @@ class _FavouritePagesState extends State<FavouritePages> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       appBar: BasicAppBar(
-        // hideBack: true,
         title: Text(
           'My Favourite',
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 20, // Làm to tiêu đề cho đẹp
+            fontSize: 20,
             color: (context.isDarkMode) ? Color(0xFFDBDBDB) : Colors.black,
           ),
         ),
@@ -116,7 +114,7 @@ class _FavouritePagesState extends State<FavouritePages> {
                                                 () async {
                                                   Navigator.pop(
                                                     bottomSheetContext,
-                                                  ); // đóng bottom sheet trước
+                                                  );
 
                                                   await context
                                                       .read<FavouriteCubit>()
@@ -155,7 +153,9 @@ class _FavouritePagesState extends State<FavouritePages> {
                                       return Container(
                                         width: double.infinity,
                                         decoration: BoxDecoration(
-                                          color: context.isDarkMode ? AppColors.lightBackground : AppColors.grayDark
+                                          color: context.isDarkMode
+                                              ? AppColors.lightBackground
+                                              : AppColors.grayDark,
                                         ),
                                         // height: 100,
                                         child: Column(
@@ -174,7 +174,7 @@ class _FavouritePagesState extends State<FavouritePages> {
                                               () async {
                                                 Navigator.pop(
                                                   bottomSheetContext,
-                                                ); // đóng bottom sheet trước
+                                                );
 
                                                 await context
                                                     .read<FavouriteCubit>()
@@ -244,24 +244,16 @@ class _FavouritePagesState extends State<FavouritePages> {
 
   Widget _search(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 16.0,
-        vertical: 12.0,
-      ), // Cách đều 2 bên lề
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
       child: TextField(
         controller: _searchController,
-        style: const TextStyle(color: Colors.white), // Màu chữ khi gõ
+        style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
           filled: true,
-          fillColor: Colors.grey[900], // Nền xám đen giống Spotify
+          fillColor: Colors.grey[900],
           hintText: 'Search for artists, songs...',
           hintStyle: const TextStyle(color: Colors.white54, fontSize: 16),
-          prefixIcon: const Icon(
-            Icons.search,
-            color: Colors.white54,
-            size: 28,
-          ), // Icon kính lúp ở đầu
-          // Nút xóa ở cuối ô tìm kiếm (chỉ hiển thị khi có text)
+          prefixIcon: const Icon(Icons.search, color: Colors.white54, size: 28),
           suffixIcon: ValueListenableBuilder<TextEditingValue>(
             valueListenable: _searchController,
             builder: (context, value, child) {
@@ -278,22 +270,17 @@ class _FavouritePagesState extends State<FavouritePages> {
             },
           ),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8.0), // Bo tròn nhẹ 4 góc
-            borderSide: BorderSide.none, // Xóa viền bao quanh
+            borderRadius: BorderRadius.circular(8.0),
+            borderSide: BorderSide.none,
           ),
-          contentPadding: const EdgeInsets.symmetric(
-            vertical: 14.0,
-          ), // Căn giữa chữ và icon theo chiều dọc
+          contentPadding: const EdgeInsets.symmetric(vertical: 14.0),
         ),
         onChanged: (value) {
-          // 1. Hủy bỏ cái hẹn giờ cũ nếu người dùng vẫn đang gõ liên tục
           if (_debounce?.isActive ?? false) {
             _debounce!.cancel();
           }
 
-          // 2. Thiết lập hẹn giờ mới: Chờ 500 mili-giây sau lần gõ phím cuối cùng
           _debounce = Timer(const Duration(milliseconds: 1000), () {
-            // Gọi SearchSongCubit để tìm kiếm (hoặc reset nếu query rỗng)
             context.read<SearchFavouriteCubit>().searchSongInFavourite(value);
           });
         },
