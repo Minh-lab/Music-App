@@ -11,6 +11,7 @@ import 'package:spotify_me/core/configs/assets/app_vectors.dart';
 import 'package:spotify_me/core/configs/theme/app_colors.dart';
 import 'package:spotify_me/domain/entities/song/song.dart';
 import 'package:spotify_me/domain/usecases/favourite/add_favourite_SongUsecase.dart';
+import 'package:spotify_me/presentation/explore/pages/explore_pages.dart';
 import 'package:spotify_me/presentation/favourite/bloc/favourite_crud/favourite_cubit.dart';
 import 'package:spotify_me/presentation/favourite/bloc/favourite_crud/favourite_state.dart';
 import 'package:spotify_me/presentation/home/bloc/new_songs_cubit/news_song_state.dart';
@@ -147,7 +148,14 @@ class _HomePageState extends State<HomePage>
                           ),
                         ),
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ExplorePages(),
+                              ),
+                            );
+                          },
                           child: Text(
                             'See more',
                             style: TextStyle(

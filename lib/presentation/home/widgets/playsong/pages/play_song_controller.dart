@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spotify_me/domain/entities/song/song.dart';
+import 'package:spotify_me/presentation/home/widgets/playsong/Bloc/play_song_cubit/play_song_cubit.dart';
 import 'package:spotify_me/presentation/home/widgets/playsong/pages/lyric_song.dart';
 import 'package:spotify_me/presentation/home/widgets/playsong/pages/play_song.dart';
 
@@ -24,16 +26,22 @@ class PlaySongControllerState extends State<PlaySongController> {
 
   @override
   Widget build(BuildContext context) {
-    return PageView(
-      controller: _pageController,
-      scrollDirection: Axis.horizontal,
-      onPageChanged: (int index) {
-        print('Trang $index');
-      },
-      children: [
-        PlaySong(playlist: widget.playlist, songEntity: widget.songEntity),
-        LyricSong(songEntity: widget.songEntity),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_)=>PlaySongCubit()),
+        // BlocProvider(create: (_)=>()),
       ],
+      child: PageView(
+        controller: _pageController,
+        scrollDirection: Axis.horizontal,
+        onPageChanged: (int index) {
+          print('Trang $index');
+        },
+        children: [
+          PlaySong(playlist: widget.playlist, songEntity: widget.songEntity),
+          LyricSong(songEntity: widget.songEntity),
+        ],
+      ),
     );
   }
 }

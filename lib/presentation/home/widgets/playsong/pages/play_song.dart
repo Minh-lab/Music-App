@@ -28,7 +28,7 @@ class PlaySong extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: MultiBlocProvider(
           providers: [
-            BlocProvider(create: (_) => PlaySongCubit()),
+     
             BlocProvider.value(value: sl<FavouriteCubit>()),
             BlocProvider(
               create: (_) =>
