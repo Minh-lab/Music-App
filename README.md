@@ -4,27 +4,34 @@ SpotifyMe is a cross-platform music streaming application built with Flutter. It
 
 ## Screenshots
 
-<table>
-
+<table border="0" cellpadding="10" cellspacing="10">
   <tr>
-    <td align="center"><b>Sign In</b></td>
-    <td align="center"><b>Register</b></td>
-    <td align="center"><b>Forgot Password</b></td>
+    <td align="center">
+      <b>Sign In</b><br><br>
+      <img src="screenshots/sign_in.png" width="250">
+    </td>
+    <td align="center">
+      <b>Register</b><br><br>
+      <img src="screenshots/register.png" width="250">
+    </td>
+    <td align="center">
+      <b>Forgot Password</b><br><br>
+      <img src="screenshots/forgot_password.png" width="250">
+    </td>
   </tr>
   <tr>
-    <td><img src="screenshots/sign_in.png" width="250"></td>
-    <td><img src="screenshots/register.png" width="250"></td>
-    <td><img src="screenshots/forgot_password.png" width="250"></td>
-  </tr>
-  <tr>
-    <td align="center"><b>Home</b></td>
-    <td align="center"><b>Explore</b></td>
-    <td align="center"><b>Now Playing</b></td>
-  </tr>
-  <tr>
-    <td><img src="screenshots/home.jpg" width="250"></td>
-    <td><img src="screenshots/explore.png" width="250"></td>
-    <td><img src="screenshots/now_playing.jpg" width="250"></td>
+    <td align="center">
+      <b>Home</b><br><br>
+      <img src="screenshots/home.jpg" width="250">
+    </td>
+    <td align="center">
+      <b>Explore</b><br><br>
+      <img src="screenshots/explore.png" width="250">
+    </td>
+    <td align="center">
+      <b>Now Playing</b><br><br>
+      <img src="screenshots/now_playing.jpg" width="250">
+    </td>
   </tr>
 </table>
 
