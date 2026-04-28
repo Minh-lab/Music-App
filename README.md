@@ -7,31 +7,44 @@ Dự án sử dụng Clean Architecture để đảm bảo khả năng mở rộ
 
 ## Screenshots
 
-### Authentication
-- **Sign In**  
-  ![](screenshots/sign_in.png)
-
-- **Register**  
-  ![](screenshots/register.png)
-
-- **Forgot Password**  
-  ![](screenshots/forgot_password.png)
-
-### Main Features
-- **Home**  
-  ![](screenshots/home.jpg)
-
-- **Explore**  
-  ![](screenshots/explore.png)
-
-- **Favourite**  
-  ![](screenshots/favourite.png)
-
-- **Profile**  
-  ![](screenshots/profile.png)
-
-- **Now Playing**  
-  ![](screenshots/now_playing.jpg)
+<table>
+  <tr>
+    <td align="center">
+      <b>Sign In</b><br/>
+      <img src="screenshots/sign_in.png" width="180"/>
+    </td>
+    <td align="center">
+      <b>Register</b><br/>
+      <img src="screenshots/register.png" width="180"/>
+    </td>
+    <td align="center">
+      <b>Forgot Password</b><br/>
+      <img src="screenshots/forgot_password.png" width="180"/>
+    </td>
+    <td align="center">
+      <b>Home</b><br/>
+      <img src="screenshots/home.jpg" width="180"/>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <b>Explore</b><br/>
+      <img src="screenshots/explore.png" width="180"/>
+    </td>
+    <td align="center">
+      <b>Favourite</b><br/>
+      <img src="screenshots/favourite.png" width="180"/>
+    </td>
+    <td align="center">
+      <b>Profile</b><br/>
+      <img src="screenshots/profile.png" width="180"/>
+    </td>
+    <td align="center">
+      <b>Now Playing</b><br/>
+      <img src="screenshots/now_playing.jpg" width="180"/>
+    </td>
+  </tr>
+</table>
 
 ---
 
@@ -39,17 +52,12 @@ Dự án sử dụng Clean Architecture để đảm bảo khả năng mở rộ
 
 Dự án tuân theo mô hình Clean Architecture với 3 layer chính:
 
-- **Presentation**  
-  UI, màn hình, và quản lý state (BLoC/Cubit)
+- **Presentation**: UI, màn hình, state (BLoC/Cubit)  
+- **Domain**: Business logic, use cases  
+- **Data**: Data source, model, repository  
 
-- **Domain**  
-  Business logic, use cases, repository interface
-
-- **Data**  
-  Data source (remote/local), model, repository implementation
-
-State management sử dụng `flutter_bloc`  
-Dependency injection sử dụng `get_it`
+State management: `flutter_bloc`  
+Dependency injection: `get_it`
 
 ---
 
@@ -67,11 +75,11 @@ Dependency injection sử dụng `get_it`
 
 ## Features
 
-- Xác thực người dùng (đăng ký, đăng nhập, quên mật khẩu qua OTP)
+- Xác thực người dùng (đăng ký, đăng nhập, OTP)
 - Phát nhạc và điều khiển playback
-- Đồng bộ lời bài hát theo thời gian
+- Đồng bộ lyric
 - Quản lý bài hát yêu thích
-- Giao diện responsive, hiện đại
+- UI responsive
 
 ---
 
