@@ -29,6 +29,14 @@ SpotifyMe is a cross-platform music streaming application built with Flutter. It
       <img src="screenshots/explore.png" width="250">
     </td>
     <td align="center">
+      <b>Favourite</b><br><br>
+      <img src="screenshots/favourite.png" width="250">
+    </td>
+    <td align="center">
+      <b>Profile</b><br><br>
+      <img src="screenshots/profile.png" width="250">
+    </td>
+    <td align="center">
       <b>Now Playing</b><br><br>
       <img src="screenshots/now_playing.jpg" width="250">
     </td>
