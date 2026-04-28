@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:spotify_me/domain/entities/song/song.dart';
-import 'package:spotify_me/presentation/home/bloc/play_song_cubit/play_song_state.dart';
+import 'package:spotify_me/presentation/home/widgets/playsong/Bloc/play_song_cubit/play_song_state.dart';
 
 class PlaySongCubit extends Cubit<PlaySongState> {
   List<SongEntity> _currentPlaylist = [];
@@ -41,11 +41,11 @@ class PlaySongCubit extends Cubit<PlaySongState> {
 
     try {
       await _player.setUrl(currentSong!.audioUrl!);
-      emit(PlaySongStart());
+      if (!isClosed) emit(PlaySongStart());
       await _player.play();
     } catch (e) {
       print('Lỗi phát nhạc: $e');
-      emit(PlaySongPause());
+      if (!isClosed) emit(PlaySongPause());
     }
   }
 
@@ -54,12 +54,12 @@ class PlaySongCubit extends Cubit<PlaySongState> {
     try {
       if (_player.playing) {
         await _player.pause();
-        emit(PlaySongPause());
+        if (!isClosed) emit(PlaySongPause());
       } else {
         // Nếu đã load URL rồi (đang pause) → chỉ resume
         // Nếu chưa load URL (lần đầu bấm Play) → load bài mới
         if (_player.duration != null) {
-          emit(PlaySongStart());
+          if (!isClosed) emit(PlaySongStart());
           await _player.play();
         } else {
           await _playCurrentSong();
@@ -67,8 +67,12 @@ class PlaySongCubit extends Cubit<PlaySongState> {
       }
     } catch (e) {
       print(e);
-      await _player.pause();
-      emit(PlaySongPause());
+      if (!isClosed) {
+        try {
+          await _player.pause();
+        } catch (_) {}
+        if (!isClosed) emit(PlaySongPause());
+      }
     }
   }
 
@@ -85,7 +89,7 @@ class PlaySongCubit extends Cubit<PlaySongState> {
       });
     }
 
-    emit(_loopSong ? StartPlayLoop() : StopPlayLoop());
+    if (!isClosed) emit(_loopSong ? StartPlayLoop() : StopPlayLoop());
   }
 
   // Logic Next: i + 1
@@ -120,7 +124,21 @@ class PlaySongCubit extends Cubit<PlaySongState> {
 
   @override
   Future<void> close() {
+    _loopSub?.cancel();
     _player.dispose();
     return super.close();
+  }
+
+  Future<void> stopAndClear() async {
+    if (!isClosed) {
+      try {
+        await _player.stop();
+      } catch (_) {}
+    }
+    _currentPlaylist = [];
+    _currentIndex = -1;
+    if (!isClosed) {
+      emit(PlaySongInitial());
+    }
   }
 }

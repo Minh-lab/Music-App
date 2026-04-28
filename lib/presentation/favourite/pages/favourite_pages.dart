@@ -44,13 +44,14 @@ class _FavouritePagesState extends State<FavouritePages> {
       ),
       body: MultiBlocProvider(
         providers: [
-          BlocProvider(create: (_) => FavouriteCubit()..getFavourite()),
+          BlocProvider.value(value: sl<FavouriteCubit>()..getFavourite()),
           BlocProvider(create: (_) => SearchFavouriteCubit()),
         ],
         child: BlocConsumer<FavouriteCubit, FavouriteState>(
           builder: (context, state) {
+            // context.read<FavouriteCubit>().getFavourite();
             if (state is FavouriteLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return CircleProcess();
             }
             if (state is FavouriteFailure) {
               return const Center(
@@ -119,7 +120,7 @@ class _FavouritePagesState extends State<FavouritePages> {
                                                   await context
                                                       .read<FavouriteCubit>()
                                                       .removeFavourite(
-                                                        defaultSongs[index].id,
+                                                        songSearch[index].id,
                                                       );
                                                 },
                                               ),
@@ -149,6 +150,14 @@ class _FavouritePagesState extends State<FavouritePages> {
                                 onPressed: () {
                                   showModalBottomSheet(
                                     context: context,
+                                    backgroundColor: context.isDarkMode
+                                        ? AppColors.grayDark
+                                        : AppColors.lightBackground,
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(20),
+                                      ),
+                                    ),
                                     builder: (bottomSheetContext) {
                                       return Container(
                                         width: double.infinity,
@@ -159,17 +168,21 @@ class _FavouritePagesState extends State<FavouritePages> {
                                         ),
                                         // height: 100,
                                         child: Column(
-                                          spacing: 16,
+                                          // 3. QUAN TRỌNG: Giúp Bottom Sheet tự động co lại cho vừa khít nội dung, không bị kéo dài lê thê
+                                          mainAxisSize: MainAxisSize.min,
                                           children: [
+                                            const SizedBox(
+                                              height: 16,
+                                            ), // Cách lề trên một chút cho thoáng
                                             _bottomSheetAction(
-                                              Icon(
+                                              const Icon(
                                                 Icons.download_done_outlined,
                                               ),
-                                              'Dowload',
+                                              'Download',
                                               () {},
                                             ),
                                             _bottomSheetAction(
-                                              Icon(Icons.delete_outline),
+                                              const Icon(Icons.delete_outline),
                                               'Remove',
                                               () async {
                                                 Navigator.pop(
@@ -183,6 +196,9 @@ class _FavouritePagesState extends State<FavouritePages> {
                                                     );
                                               },
                                             ),
+                                            const SizedBox(
+                                              height: 24,
+                                            ), // Cách lề dưới cùng (rất cần thiết trên iPhone dính thanh Home Indicator)
                                           ],
                                         ),
                                       );
@@ -208,6 +224,13 @@ class _FavouritePagesState extends State<FavouritePages> {
                 content: Text('Remove song from favourite successfully'),
               );
               ScaffoldMessenger.of(context).showSnackBar(snackbar);
+
+              // Nếu đang tìm kiếm thì phải refresh lại danh sách tìm kiếm để cập nhật UI, bắt tìm kiếm lại(refesh)
+              if (_searchController.text.isNotEmpty) {
+                context.read<SearchFavouriteCubit>().searchSongInFavourite(
+                  _searchController.text,
+                );
+              }
             } else if (state is FavouriteRemoveFailure) {
               var snackbar = new SnackBar(
                 content: Text('Remove song from favourite failure'),

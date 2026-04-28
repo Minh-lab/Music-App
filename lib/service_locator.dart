@@ -1,10 +1,14 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:spotify_me/data/repositories/artists/artists_repository_iml.dart';
+import 'package:spotify_me/data/repositories/user/user_repository_iml.dart';
 import 'package:spotify_me/data/source/artists/artists_itunes_service.dart';
 import 'package:spotify_me/data/source/artists/artists_service.dart';
 import 'package:spotify_me/data/source/song/song_itunes_service.dart';
+import 'package:spotify_me/data/source/user/user_service.dart';
+import 'package:spotify_me/data/source/user/user_supabase_service_iml.dart';
 import 'package:spotify_me/domain/repositories/artists/artists_repository.dart';
+import 'package:spotify_me/domain/repositories/user_repository/user_repository.dart';
 import 'package:spotify_me/domain/usecases/artists/get_artists.dart';
 import 'package:spotify_me/domain/usecases/artists/get_artists_by_id.dart';
 import 'package:spotify_me/domain/usecases/auth/change_password.dart';
@@ -14,6 +18,8 @@ import 'package:spotify_me/domain/usecases/auth/send_otp.dart';
 import 'package:spotify_me/domain/usecases/favourite/is_song_in_favourite.dart';
 import 'package:spotify_me/domain/usecases/favourite/remove_song_favourite.dart';
 import 'package:spotify_me/domain/usecases/favourite/search_songs_in_favourite.dart';
+import 'package:spotify_me/domain/usecases/profile/get_profile_usecase.dart';
+import 'package:spotify_me/domain/usecases/profile/update_profile.dart';
 import 'package:spotify_me/domain/usecases/song/search_song.dart';
 import 'package:spotify_me/presentation/auth/pages/forgot_password/cubit/otp/otp_cubit.dart';
 import 'package:spotify_me/presentation/favourite/bloc/favourite_crud/favourite_cubit.dart';
@@ -35,15 +41,17 @@ import 'package:spotify_me/domain/usecases/favourite/add_favourite_SongUsecase.d
 import 'package:spotify_me/domain/usecases/favourite/get_favourite.dart';
 import 'package:spotify_me/domain/usecases/song/get_news_songs.dart';
 import 'package:spotify_me/presentation/home/bloc/new_songs_cubit/news_songs_cubit.dart';
-import 'package:spotify_me/presentation/home/bloc/play_song_cubit/play_song_cubit.dart';
-import 'package:spotify_me/presentation/home/widgets/PlaySongPages/Bloc/song_favourite_cubit.dart';
-import 'package:spotify_me/presentation/home/widgets/PlaySongPages/Bloc/song_favourite_state.dart';
+import 'package:spotify_me/presentation/home/widgets/playsong/Bloc/play_song_cubit/play_song_cubit.dart';
+import 'package:spotify_me/presentation/home/widgets/playsong/Bloc/song_favourite_cubit.dart';
+import 'package:spotify_me/presentation/home/widgets/playsong/Bloc/song_favourite_state.dart';
+import 'package:spotify_me/presentation/profile/bloc/profile/profile_cubit.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 final sl = GetIt.instance;
 Future<void> initializeDependencies() async {
   sl.registerSingleton<AuthService>(AuthSupabaseServiceImpl());
   sl.registerSingleton<ArtistsService>(ArtistsItunesService());
+  sl.registerSingleton<UserService>(UserSupabaseServiceIml());
   sl.registerSingleton<SongService>(SongItunesService());
   sl.registerSingleton<FavouriteService>(FavouriteSupabaseIml());
   sl.registerSingleton<AuthRepository>(AuthRepositoryImpl());
@@ -59,6 +67,8 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<RemoveSongFavouriteUsecase>(
     RemoveSongFavouriteUsecase(),
   );
+  sl.registerSingleton<GetProfileUsecase>(GetProfileUsecase());
+  sl.registerSingleton<UpdateProfileUsecase>(UpdateProfileUsecase());
   sl.registerSingleton<IsSongInFavouriteUsecase>(IsSongInFavouriteUsecase());
   sl.registerSingleton<SearchSongsInFavouriteUsecase>(
     SearchSongsInFavouriteUsecase(),
@@ -69,9 +79,12 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<GetArtistsByIdUsecase>(GetArtistsByIdUsecase());
   sl.registerSingleton<SupabaseClient>(Supabase.instance.client);
   sl.registerSingleton<FavouriteRepository>(FavouriteRepositoryIml());
-  sl.registerLazySingleton<FavouriteCubit>(() => FavouriteCubit());
+  sl.registerSingleton<UserRepository>(UserRepositoryIml());
+  sl.registerFactory<FavouriteCubit>(() => FavouriteCubit());
   sl.registerLazySingleton<OtpCubit>(() => OtpCubit());
   sl.registerLazySingleton<PlaySongCubit>(() => PlaySongCubit());
+  sl.registerFactory<ProfileCubit>(() => ProfileCubit());
+  // sl.registerLazySingleton<it>(() => FavouriteCubit());
   sl.registerFactory<SongFavouriteCubit>(() => SongFavouriteCubit());
   sl.registerFactory<NewsSongsCubit>(() => NewsSongsCubit());
   sl.registerSingleton<SearchSongUsecase>(SearchSongUsecase());

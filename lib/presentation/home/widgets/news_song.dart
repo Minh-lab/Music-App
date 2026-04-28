@@ -7,10 +7,11 @@ import 'package:spotify_me/core/configs/theme/app_colors.dart';
 import 'package:spotify_me/domain/entities/song/song.dart';
 import 'package:spotify_me/presentation/home/bloc/new_songs_cubit/news_song_state.dart';
 import 'package:spotify_me/presentation/home/bloc/new_songs_cubit/news_songs_cubit.dart';
-import 'package:spotify_me/presentation/home/bloc/play_song_cubit/play_song_cubit.dart';
-import 'package:spotify_me/presentation/home/bloc/play_song_cubit/play_song_state.dart';
-import 'package:spotify_me/presentation/home/widgets/PlaySongPages/pages/play_song.dart';
+import 'package:spotify_me/presentation/home/widgets/playsong/Bloc/play_song_cubit/play_song_cubit.dart';
+import 'package:spotify_me/presentation/home/widgets/playsong/Bloc/play_song_cubit/play_song_state.dart';
+import 'package:spotify_me/presentation/home/widgets/playsong/pages/play_song.dart';
 import 'package:spotify_me/presentation/home/widgets/play_song_button.dart';
+import 'package:spotify_me/presentation/home/widgets/playsong/pages/play_song_controller.dart';
 
 class NewsSong extends StatelessWidget {
   @override
@@ -47,8 +48,10 @@ class NewsSong extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) =>
-                    PlaySong(songEntity: song, playlist: songs),
+                builder: (context) => PlaySongController(
+                  playlist: songs,
+                  songEntity: song,
+                ),
               ),
             );
           },

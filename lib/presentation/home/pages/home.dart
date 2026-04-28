@@ -163,41 +163,19 @@ class _HomePageState extends State<HomePage>
                   ),
 
                   const SizedBox(height: 10),
-                  BlocProvider.value(
-                    value: sl<FavouriteCubit>(),
-                    child: BlocListener<FavouriteCubit, FavouriteState>(
-                      listener: (context, state) {
-                        if (state is FavouriteAddFailure) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(state.errorMessage ?? 'Error'),
-                            ),
-                          );
-                        } else if (state is FavouriteAddSuccess) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                'Add song to favourite successfully',
-                              ),
-                            ),
-                          );
-                        }
-                      },
-                      child: ListView.builder(
-                        padding: EdgeInsets.zero,
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: state.songs.length,
-                        itemBuilder: (context, index) {
-                          List<SongEntity> songs = state.songs;
-                          return SongListTail(
-                            context: context,
-                            song: songs[index],
-                            playlist: songs,
-                          );
-                        },
-                      ),
-                    ),
+                  ListView.builder(
+                    padding: EdgeInsets.zero,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: state.songs.length,
+                    itemBuilder: (context, index) {
+                      List<SongEntity> songs = state.songs;
+                      return SongListTail(
+                        context: context,
+                        song: songs[index],
+                        playlist: songs,
+                      );
+                    },
                   ),
                 ],
               ),

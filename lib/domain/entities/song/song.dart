@@ -7,6 +7,7 @@ class SongEntity {
   final DateTime releaseDate;
   final String? coverUrl;
   final String? audioUrl;
+  final String? lyric;
   SongEntity({
     required this.id,
     required this.artist,
@@ -15,6 +16,7 @@ class SongEntity {
     required this.title,
     this.audioUrl,
     this.coverUrl,
+    this.lyric,
 
   });
-}
+} 

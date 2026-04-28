@@ -30,7 +30,8 @@ class FavouriteCubit extends Cubit<FavouriteState> {
         emit(FavouriteAddFailure(errorMessage: l));
       },
       (r) {
-        emit(FavouriteAddSuccess());
+        print('add favourite success');
+        if (!isClosed) emit(FavouriteAddSuccess());
         getFavourite();
       },
     );
@@ -46,8 +47,15 @@ class FavouriteCubit extends Cubit<FavouriteState> {
       (r) {
         print('delete song from favourite success');
         if (!isClosed) emit(FavouriteRemoveSuccess());
+
         getFavourite();
       },
     );
+  }
+
+  void clearData() {
+    if (!isClosed) {
+      emit(FavouriteLoaded(list: const []));
+    }
   }
 }

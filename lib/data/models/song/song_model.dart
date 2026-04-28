@@ -8,6 +8,7 @@ class SongModel {
   final DateTime releaseDate;
   final String? audioUrl;
   final String? coverUrl;
+  final String? lyric;
 
   SongModel({
     required this.id,
@@ -17,6 +18,7 @@ class SongModel {
     required this.title,
     this.audioUrl,
     this.coverUrl,
+    this.lyric,
   });
 
   factory SongModel.fromJson(Map<String, dynamic> json) {
@@ -26,6 +28,7 @@ class SongModel {
       artist: json['artist']?.toString() ?? 'Unknown Artist',
       coverUrl: json['cover_url']?.toString(),
       audioUrl: json['audio_url']?.toString(),
+      lyric: json['lyric']?.toString(),
       duration: json['duration'] != null
           ? Duration(seconds: (json['duration'] as num).toInt())
           : Duration.zero,                        
@@ -42,6 +45,7 @@ class SongModel {
       'artist': artist,
       'cover_url': coverUrl,
       'audio_url': audioUrl,
+      'lyric': lyric,
       'duration': duration.inSeconds,          
       'releaseDate': releaseDate.toIso8601String(), 
     };
@@ -58,6 +62,7 @@ extension SongModelToEntity on SongModel {
       title: title,
       coverUrl: coverUrl,
       audioUrl: audioUrl,
+      lyric: lyric,
     );
   }
 }
