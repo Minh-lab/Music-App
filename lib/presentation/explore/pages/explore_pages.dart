@@ -20,13 +20,12 @@ class ExplorePages extends StatefulWidget {
 }
 
 class _ExplorePagesState extends State<ExplorePages> {
-  Timer? _debounce; // Khai báo biến Timer
+  Timer? _debounce;
   final TextEditingController _searchController = TextEditingController();
 
   @override
   void dispose() {
-    _debounce
-        ?.cancel(); // Nhớ hủy Timer khi thoát màn hình để chống rò rỉ bộ nhớ
+    _debounce?.cancel();
     _searchController.dispose();
     super.dispose();
   }
@@ -40,7 +39,7 @@ class _ExplorePagesState extends State<ExplorePages> {
             'Explore',
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 20, // Làm to tiêu đề cho đẹp
+              fontSize: 20,
               color: (context.isDarkMode) ? Color(0xFFDBDBDB) : Colors.black,
             ),
           ),
@@ -68,12 +67,10 @@ class _ExplorePagesState extends State<ExplorePages> {
                     Expanded(
                       child: BlocBuilder<SearchSongCubit, SearchSongState>(
                         builder: (context, searchState) {
-                          // Đang tải kết quả tìm kiếm
                           if (searchState is SearchSongLoading) {
                             return Center(child: CircleProcess());
                           }
 
-                          // Tìm kiếm thất bại
                           if (searchState is SearchSongFailure) {
                             return Center(
                               child: Padding(
@@ -87,7 +84,6 @@ class _ExplorePagesState extends State<ExplorePages> {
                             );
                           }
 
-                          // Có kết quả tìm kiếm
                           if (searchState is SearchSongLoaded) {
                             final searchResults = searchState.songs;
                             if (searchResults.isEmpty) {
@@ -115,7 +111,6 @@ class _ExplorePagesState extends State<ExplorePages> {
                             );
                           }
 
-                          // Trạng thái ban đầu (SearchSongInitial)  hiển thị danh sách bài hát mới
                           return ListView.builder(
                             padding: EdgeInsets.symmetric(horizontal: 16),
                             itemCount: defaultSongs.length,
@@ -144,24 +139,16 @@ class _ExplorePagesState extends State<ExplorePages> {
 
   Widget _search(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 16.0,
-        vertical: 12.0,
-      ), // Cách đều 2 bên lề
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
       child: TextField(
         controller: _searchController,
-        style: const TextStyle(color: Colors.white), // Màu chữ khi gõ
+        style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
           filled: true,
-          fillColor: Colors.grey[900], // Nền xám đen giống Spotify
+          fillColor: Colors.grey[900],
           hintText: 'Search for artists, songs...',
           hintStyle: const TextStyle(color: Colors.white54, fontSize: 16),
-          prefixIcon: const Icon(
-            Icons.search,
-            color: Colors.white54,
-            size: 28,
-          ), // Icon kính lúp ở đầu
-          // Nút xóa ở cuối ô tìm kiếm (chỉ hiển thị khi có text)
+          prefixIcon: const Icon(Icons.search, color: Colors.white54, size: 28),
           suffixIcon: ValueListenableBuilder<TextEditingValue>(
             valueListenable: _searchController,
             builder: (context, value, child) {
@@ -176,22 +163,17 @@ class _ExplorePagesState extends State<ExplorePages> {
             },
           ),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8.0), // Bo tròn nhẹ 4 góc
-            borderSide: BorderSide.none, // Xóa viền bao quanh
+            borderRadius: BorderRadius.circular(8.0),
+            borderSide: BorderSide.none,
           ),
-          contentPadding: const EdgeInsets.symmetric(
-            vertical: 14.0,
-          ), // Căn giữa chữ và icon theo chiều dọc
+          contentPadding: const EdgeInsets.symmetric(vertical: 14.0),
         ),
         onChanged: (value) {
-          // 1. Hủy bỏ cái hẹn giờ cũ nếu người dùng vẫn đang gõ liên tục
           if (_debounce?.isActive ?? false) {
             _debounce!.cancel();
           }
 
-          // 2. Thiết lập hẹn giờ mới: Chờ 500 mili-giây sau lần gõ phím cuối cùng
           _debounce = Timer(const Duration(milliseconds: 500), () {
-            // Gọi SearchSongCubit để tìm kiếm (hoặc reset nếu query rỗng)
             context.read<SearchSongCubit>().searchSong(value);
           });
         },

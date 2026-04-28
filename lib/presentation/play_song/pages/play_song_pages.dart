@@ -34,12 +34,10 @@ class PlaySong extends StatelessWidget {
         ],
         child: BlocBuilder<PlaySongCubit, PlaySongState>(
           buildWhen: (previous, current) {
-            // Chỉ rebuild khi state liên quan đến play/pause
-            // Bỏ qua StartPlayLoop / StopPlayLoop
             return current is PlaySongStart ||
-                   current is PlaySongPause ||
-                   current is PlaySongInitial ||
-                   current is PlaySongError;
+                current is PlaySongPause ||
+                current is PlaySongInitial ||
+                current is PlaySongError;
           },
           builder: (context, songState) {
             return SingleChildScrollView(
@@ -69,22 +67,24 @@ class PlaySong extends StatelessWidget {
                         ),
                         BlocBuilder<SongFavouriteCubit, SongFavouriteState>(
                           builder: (context, state) {
-                            return _favouriteButton(state is SongInFavourite, () {
-                              if (state is SongNotInFavourite) {
-                                context.read<FavouriteCubit>().addFavourite(
-                                  songEntity!.id,
-                                );
-                              } else if (state is SongInFavourite) {
-                                context.read<FavouriteCubit>().removeFavourite(
-                                  songEntity!.id,
-                                );
-                              }
+                            return _favouriteButton(
+                              state is SongInFavourite,
+                              () {
+                                if (state is SongNotInFavourite) {
+                                  context.read<FavouriteCubit>().addFavourite(
+                                    songEntity!.id,
+                                  );
+                                } else if (state is SongInFavourite) {
+                                  context
+                                      .read<FavouriteCubit>()
+                                      .removeFavourite(songEntity!.id);
+                                }
 
-                              // Dùng toggle để cập nhật giao diện (màu nút) tức thời ngầm!
-                              context
-                                  .read<SongFavouriteCubit>()
-                                  .toggleFavourite();
-                            });
+                                context
+                                    .read<SongFavouriteCubit>()
+                                    .toggleFavourite();
+                              },
+                            );
                           },
                         ),
                       ],
@@ -98,9 +98,7 @@ class PlaySong extends StatelessWidget {
                       children: [
                         _previousSongButton(context, () {
                           int indexPrevious = 0;
-                          int indexCurrent = playlist.indexOf(
-                            songEntity!,
-                          );
+                          int indexCurrent = playlist.indexOf(songEntity!);
                           if (indexCurrent >= 1 &&
                               indexCurrent <= playlist.length - 1) {
                             indexPrevious = indexCurrent - 1;
@@ -117,7 +115,6 @@ class PlaySong extends StatelessWidget {
                         }),
                         _playSongButton(songState, () async {
                           final cubit = context.read<PlaySongCubit>();
-                          // Chỉ set playlist khi chưa có bài (lần đầu bấm Play)
                           if (cubit.currentSong == null) {
                             int index = playlist.indexOf(songEntity!);
                             cubit.playList(playlist, index);
@@ -126,9 +123,7 @@ class PlaySong extends StatelessWidget {
                         }),
                         _nextSongButton(context, () {
                           int indexNext = 0;
-                          int indexCurrent = playlist.indexOf(
-                            songEntity!,
-                          );
+                          int indexCurrent = playlist.indexOf(songEntity!);
                           if (indexCurrent >= 0 &&
                               indexCurrent < playlist.length - 1) {
                             indexNext = indexCurrent + 1;
@@ -146,17 +141,13 @@ class PlaySong extends StatelessWidget {
                         BlocBuilder<PlaySongCubit, PlaySongState>(
                           buildWhen: (previous, current) {
                             return current is StartPlayLoop ||
-                                   current is StopPlayLoop;
+                                current is StopPlayLoop;
                           },
                           builder: (context, loopState) {
                             final isLooping = loopState is StartPlayLoop;
-                            return _loopSongButton(
-                              context,
-                              isLooping,
-                              () {
-                                context.read<PlaySongCubit>().playLoop();
-                              },
-                            );
+                            return _loopSongButton(context, isLooping, () {
+                              context.read<PlaySongCubit>().playLoop();
+                            });
                           },
                         ),
                       ],
@@ -188,7 +179,6 @@ class PlaySong extends StatelessWidget {
   Widget _sliderPlay(BuildContext context) {
     final player = context.read<PlaySongCubit>().audioPlayer;
 
-    // Dùng StreamBuilder để slider tự chạy không cần gọi setState
     return StreamBuilder<Duration>(
       stream: player.positionStream,
       builder: (context, snapshot) {
@@ -303,7 +293,11 @@ class PlaySong extends StatelessWidget {
     );
   }
 
-  Widget _loopSongButton(BuildContext context, bool isLooping, VoidCallback onPressed) {
+  Widget _loopSongButton(
+    BuildContext context,
+    bool isLooping,
+    VoidCallback onPressed,
+  ) {
     return IconButton(
       onPressed: onPressed,
       icon: Icon(
