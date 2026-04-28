@@ -1,3 +1,4 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:spotify_me/data/repositories/artists/artists_repository_iml.dart';
 import 'package:spotify_me/data/repositories/user/user_repository_iml.dart';
@@ -10,13 +11,17 @@ import 'package:spotify_me/domain/repositories/artists/artists_repository.dart';
 import 'package:spotify_me/domain/repositories/user_repository/user_repository.dart';
 import 'package:spotify_me/domain/usecases/artists/get_artists.dart';
 import 'package:spotify_me/domain/usecases/artists/get_artists_by_id.dart';
+import 'package:spotify_me/domain/usecases/auth/change_password.dart';
+import 'package:spotify_me/domain/usecases/auth/check_otp.dart';
 import 'package:spotify_me/domain/usecases/auth/logout.dart';
+import 'package:spotify_me/domain/usecases/auth/send_otp.dart';
 import 'package:spotify_me/domain/usecases/favourite/is_song_in_favourite.dart';
 import 'package:spotify_me/domain/usecases/favourite/remove_song_favourite.dart';
 import 'package:spotify_me/domain/usecases/favourite/search_songs_in_favourite.dart';
 import 'package:spotify_me/domain/usecases/profile/get_profile_usecase.dart';
 import 'package:spotify_me/domain/usecases/profile/update_profile.dart';
 import 'package:spotify_me/domain/usecases/song/search_song.dart';
+import 'package:spotify_me/presentation/auth/pages/forgot_password/cubit/otp/otp_cubit.dart';
 import 'package:spotify_me/presentation/favourite/bloc/favourite_crud/favourite_cubit.dart';
 import 'package:spotify_me/data/repositories/auth/auth_repository_impl.dart';
 import 'package:spotify_me/data/repositories/favourite/favourite_repository_iml.dart';
@@ -27,7 +32,7 @@ import 'package:spotify_me/data/source/favoutire/favourite_service.dart';
 import 'package:spotify_me/data/source/favoutire/favourite_supabase_iml.dart';
 import 'package:spotify_me/data/source/song/song_service.dart';
 import 'package:spotify_me/data/source/song/song_supabase_service.dart';
-import 'package:spotify_me/domain/repositories/auth/auth.dart';
+import 'package:spotify_me/domain/repositories/auth/auth_repository.dart';
 import 'package:spotify_me/domain/repositories/song/song_repository.dart';
 import 'package:spotify_me/domain/usecases/auth/signin.dart';
 import 'package:spotify_me/domain/usecases/auth/signup.dart';
@@ -58,6 +63,7 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<GetNewsSongsUsecase>(GetNewsSongsUsecase());
   sl.registerSingleton<AddFavouriteSongUsecase>(AddFavouriteSongUsecase());
   sl.registerSingleton<LogoutUsecase>(LogoutUsecase());
+  sl.registerSingleton<SendOtpUsecase>(SendOtpUsecase());
   sl.registerSingleton<RemoveSongFavouriteUsecase>(
     RemoveSongFavouriteUsecase(),
   );
@@ -68,11 +74,14 @@ Future<void> initializeDependencies() async {
     SearchSongsInFavouriteUsecase(),
   );
   sl.registerSingleton<GetArtistsUsecase>(GetArtistsUsecase());
+  sl.registerSingleton<ChangePasswordUseCase>(ChangePasswordUseCase());
+  sl.registerSingleton<CheckOtpUsecase>(CheckOtpUsecase());
   sl.registerSingleton<GetArtistsByIdUsecase>(GetArtistsByIdUsecase());
   sl.registerSingleton<SupabaseClient>(Supabase.instance.client);
   sl.registerSingleton<FavouriteRepository>(FavouriteRepositoryIml());
   sl.registerSingleton<UserRepository>(UserRepositoryIml());
   sl.registerFactory<FavouriteCubit>(() => FavouriteCubit());
+  sl.registerLazySingleton<OtpCubit>(() => OtpCubit());
   sl.registerLazySingleton<PlaySongCubit>(() => PlaySongCubit());
   sl.registerFactory<ProfileCubit>(() => ProfileCubit());
   // sl.registerLazySingleton<it>(() => FavouriteCubit());

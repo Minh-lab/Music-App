@@ -12,6 +12,7 @@ import 'package:spotify_me/data/models/auth/signin_request.dart';
 import 'package:spotify_me/domain/usecases/auth/signin.dart';
 import 'package:spotify_me/presentation/auth/bloc/signin/signin_cubit.dart';
 import 'package:spotify_me/presentation/auth/bloc/signin/signin_state.dart';
+import 'package:spotify_me/presentation/auth/pages/forgot_password/verify_otp.dart';
 import 'package:spotify_me/presentation/auth/pages/signup.dart';
 import 'package:spotify_me/presentation/home/pages/home.dart';
 import 'package:spotify_me/presentation/main/pages/main_pages.dart';
@@ -97,7 +98,6 @@ class _SigninPageState extends State<SigninPage> {
                             );
                           },
                         ),
-                        
 
                         // Spacer(),
                       ],
@@ -169,7 +169,15 @@ class _SigninPageState extends State<SigninPage> {
   }
 
   Widget _recoveryPassword(BuildContext context) {
-    return TextButton(onPressed: () {}, child: Text('Recovery Password'));
+    return TextButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => VerifyOtp()),
+        );
+      },
+      child: Text('Recovery Password'),
+    );
   }
 
   Widget _registerText(BuildContext context) {
