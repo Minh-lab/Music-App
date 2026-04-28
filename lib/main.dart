@@ -12,7 +12,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
   await dotenv.load(fileName: ".env");
 
   late String storagePath;

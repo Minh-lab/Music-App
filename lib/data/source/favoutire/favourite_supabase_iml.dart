@@ -9,12 +9,15 @@ class FavouriteSupabaseIml extends FavouriteService {
   @override
   Future<Either> getFavouriteSongs() async {
     try {
-      // Supabase tự động filter theo Row Level Security (RLS) cho auth.uid()
-      // Nên chỉ cần query bảng favourites.
-      // Dùng cú pháp JOIN 'songs(*)' để lấy luôn thông tin bài hát dựa trên foreign key song_id.
+      final userId = sl<SupabaseClient>().auth.currentUser?.id;
+      if (userId == null) {
+        return const Left('User not login');
+      }
+
       var data = await sl<SupabaseClient>()
           .from('favourites')
-          .select('song_id, songs(*)');
+          .select('song_id, songs(*)')
+          .eq('user_id', userId);
 
       List<SongEntity> favouriteList = [];
 
@@ -25,7 +28,7 @@ class FavouriteSupabaseIml extends FavouriteService {
           favouriteList.add(songModel.toEntity());
         }
       }
-
+      // favouriteList.forEach((e) => print(e.title));
       return Right(favouriteList);
     } catch (e) {
       print('Error getting favourite songs: $e');
@@ -48,7 +51,7 @@ class FavouriteSupabaseIml extends FavouriteService {
       });
       return const Right('Add song to favourite successfully');
     } catch (e) {
-      print(e.toString());
+      // print(e.toString());
       return Left(e.toString());
     }
   }
@@ -67,7 +70,7 @@ class FavouriteSupabaseIml extends FavouriteService {
       });
       return const Right('Remove song from favourite successfully');
     } catch (e) {
-      print(e.toString());
+      // print(e.toString());
       return Left(e.toString());
     }
   }
@@ -87,7 +90,7 @@ class FavouriteSupabaseIml extends FavouriteService {
           .eq('user_id', userId);
       return Right(result.isNotEmpty);
     } catch (e) {
-      print(e.toString());
+      // print(e.toString());
       return Left(e.toString());
     }
   }
@@ -113,9 +116,11 @@ class FavouriteSupabaseIml extends FavouriteService {
       // print(
       //   result.map((e) => SongModel.fromJson(e['songs']).toEntity() ).toList(),
       // );
-      return Right(result.map((e) => SongModel.fromJson(e['songs']).toEntity()).toList());
+      return Right(
+        result.map((e) => SongModel.fromJson(e['songs']).toEntity()).toList(),
+      );
     } catch (e) {
-      print(e.toString());
+      // print(e.toString());
       return Left(e.toString());
     }
   }

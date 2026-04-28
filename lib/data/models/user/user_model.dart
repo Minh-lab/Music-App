@@ -1,26 +1,23 @@
+import 'package:spotify_me/domain/entities/auth/user.dart';
+
 class UserModel {
   final String id;
   final String name;
   final String email;
-  UserModel({
-    required this.id,
-    required this.name,
-    required this.email,
-  });
+  final String? avatar;
+  UserModel({required this.id, required this.name, required this.email, this.avatar});
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
-    return UserModel(
-      id: json['id'],
-      name: json['name'],
-      email: json['email'],
-    );
+    return UserModel(id: json['id'], name: json['name'], email: json['email'], avatar: json['avatar']);
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'email': email,
-    };
+    return {'id': id, 'name': name, 'email': email, 'avatar': avatar};
+  }
+}
+
+extension ToEntityClass on UserModel {
+  UserEntity toEntity() {
+    return UserEntity(email: email, fullName: name, userId: id, avatar: avatar);
   }
 }

@@ -8,6 +8,7 @@ import 'package:spotify_me/core/configs/assets/app_vectors.dart';
 import 'package:spotify_me/presentation/auth/pages/signin.dart';
 import 'package:spotify_me/presentation/auth/pages/signup.dart';
 import 'package:spotify_me/presentation/home/pages/home.dart';
+import 'package:spotify_me/presentation/main/pages/main_pages.dart';
 
 class SignupOrSigninPage extends StatelessWidget {
   const SignupOrSigninPage({super.key});
@@ -80,7 +81,8 @@ class SignupOrSigninPage extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (BuildContext context) => SigninPage(),
+                                builder: (BuildContext context) =>
+                                    SigninPage(),
                               ),
                             );
                           },

@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spotify_me/domain/usecases/favourite/is_song_in_favourite.dart';
-import 'package:spotify_me/presentation/home/widgets/PlaySongPages/Bloc/song_favourite_state.dart';
+import 'package:spotify_me/presentation/home/widgets/playsong/Bloc/song_favourite_state.dart';
 import 'package:spotify_me/service_locator.dart';
 
 class SongFavouriteCubit extends Cubit<SongFavouriteState> {

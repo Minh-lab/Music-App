@@ -9,10 +9,10 @@ import 'package:spotify_me/domain/usecases/favourite/is_song_in_favourite.dart';
 import 'package:spotify_me/presentation/favourite/bloc/favourite_crud/favourite_cubit.dart';
 import 'package:spotify_me/presentation/favourite/bloc/favourite_crud/favourite_state.dart'
     hide SongInFavourite;
-import 'package:spotify_me/presentation/home/bloc/play_song_cubit/play_song_cubit.dart';
-import 'package:spotify_me/presentation/home/bloc/play_song_cubit/play_song_state.dart';
-import 'package:spotify_me/presentation/home/widgets/PlaySongPages/Bloc/song_favourite_cubit.dart';
-import 'package:spotify_me/presentation/home/widgets/PlaySongPages/Bloc/song_favourite_state.dart';
+import 'package:spotify_me/presentation/home/widgets/playsong/Bloc/play_song_cubit/play_song_cubit.dart';
+import 'package:spotify_me/presentation/home/widgets/playsong/Bloc/play_song_cubit/play_song_state.dart';
+import 'package:spotify_me/presentation/home/widgets/playsong/Bloc/song_favourite_cubit.dart';
+import 'package:spotify_me/presentation/home/widgets/playsong/Bloc/song_favourite_state.dart';
 import 'package:spotify_me/service_locator.dart';
 
 class PlaySong extends StatelessWidget {
