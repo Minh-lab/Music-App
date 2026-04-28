@@ -45,14 +45,16 @@ class PlaySong extends StatelessWidget {
                     duration: Duration(milliseconds: 500),
                   ),
                 );
-              } else if (songState is FavouriteRemoveSuccess) {
-                print('xóa');
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Remove song from favourite successfully'),
-                  ),
-                );
-              } else if (songState is FavouriteAddFailure) {
+              }
+              // else if (songState is FavouriteRemoveSuccess) {
+              //   print('xóa');
+              //   ScaffoldMessenger.of(context).showSnackBar(
+              //     const SnackBar(
+              //       content: Text('Remove song from favourite successfully'),
+              //     ),
+              //   );
+              // }
+              else if (songState is FavouriteAddFailure) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(songState.errorMessage ?? 'Add failed'),

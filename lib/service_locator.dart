@@ -80,11 +80,11 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<SupabaseClient>(Supabase.instance.client);
   sl.registerSingleton<FavouriteRepository>(FavouriteRepositoryIml());
   sl.registerSingleton<UserRepository>(UserRepositoryIml());
-  sl.registerFactory<FavouriteCubit>(() => FavouriteCubit());
   sl.registerLazySingleton<OtpCubit>(() => OtpCubit());
   sl.registerLazySingleton<PlaySongCubit>(() => PlaySongCubit());
   sl.registerFactory<ProfileCubit>(() => ProfileCubit());
   // sl.registerLazySingleton<it>(() => FavouriteCubit());
+  sl.registerLazySingleton<FavouriteCubit>(() => FavouriteCubit());
   sl.registerFactory<SongFavouriteCubit>(() => SongFavouriteCubit());
   sl.registerFactory<NewsSongsCubit>(() => NewsSongsCubit());
   sl.registerSingleton<SearchSongUsecase>(SearchSongUsecase());

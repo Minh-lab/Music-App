@@ -38,7 +38,7 @@ class _FavouritePagesState extends State<FavouritePages> {
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,
-            color: (context.isDarkMode) ? Color(0xFFDBDBDB) : Colors.black,
+            color: (context.isDarkMode) ? Colors.white : Colors.black,
           ),
         ),
       ),
@@ -54,10 +54,10 @@ class _FavouritePagesState extends State<FavouritePages> {
               return CircleProcess();
             }
             if (state is FavouriteFailure) {
-              return const Center(
+              return Center(
                 child: Text(
                   'Load failure',
-                  style: TextStyle(color: Colors.red),
+                  style: TextStyle(color: Theme.of(context).colorScheme.error),
                 ),
               );
             }
@@ -65,8 +65,13 @@ class _FavouritePagesState extends State<FavouritePages> {
               final List<SongEntity> defaultSongs = state.list ?? [];
 
               if (defaultSongs.isEmpty) {
-                return const Center(
-                  child: Text('Danh sách yêu thích đang trống.'),
+                return Center(
+                  child: Text(
+                    'Danh sách yêu thích đang trống.',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
+                  ),
                 );
               }
               return Column(
@@ -163,8 +168,8 @@ class _FavouritePagesState extends State<FavouritePages> {
                                         width: double.infinity,
                                         decoration: BoxDecoration(
                                           color: context.isDarkMode
-                                              ? AppColors.lightBackground
-                                              : AppColors.grayDark,
+                                              ? AppColors.grayDark
+                                              : AppColors.lightBackground,
                                         ),
                                         // height: 100,
                                         child: Column(
@@ -220,6 +225,7 @@ class _FavouritePagesState extends State<FavouritePages> {
           },
           listener: (BuildContext context, FavouriteState state) {
             if (state is FavouriteRemoveSuccess) {
+              context.read<FavouriteCubit>().getFavourite();
               var snackbar = new SnackBar(
                 content: Text('Remove song from favourite successfully'),
               );
@@ -258,7 +264,15 @@ class _FavouritePagesState extends State<FavouritePages> {
           child: Row(
             spacing: 20,
             mainAxisAlignment: MainAxisAlignment.start,
-            children: [leadIcon ?? Container(), Text(title ?? 'No action')],
+            children: [
+              leadIcon ?? Container(),
+              Text(
+                title ?? 'No action',
+                style: TextStyle(
+                  color: context.isDarkMode ? Colors.white : Colors.black,
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -270,19 +284,31 @@ class _FavouritePagesState extends State<FavouritePages> {
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
       child: TextField(
         controller: _searchController,
-        style: const TextStyle(color: Colors.white),
+        style: TextStyle(
+          color: context.isDarkMode ? Colors.white : Colors.black,
+        ),
         decoration: InputDecoration(
           filled: true,
-          fillColor: Colors.grey[900],
+          fillColor: context.isDarkMode ? Colors.grey[900] : Colors.grey[100],
           hintText: 'Search for artists, songs...',
-          hintStyle: const TextStyle(color: Colors.white54, fontSize: 16),
-          prefixIcon: const Icon(Icons.search, color: Colors.white54, size: 28),
+          hintStyle: TextStyle(
+            color: context.isDarkMode ? Colors.white54 : Colors.black54,
+            fontSize: 16,
+          ),
+          prefixIcon: Icon(
+            Icons.search,
+            color: context.isDarkMode ? Colors.white54 : Colors.black54,
+            size: 28,
+          ),
           suffixIcon: ValueListenableBuilder<TextEditingValue>(
             valueListenable: _searchController,
             builder: (context, value, child) {
               if (value.text.isEmpty) return const SizedBox.shrink();
               return IconButton(
-                icon: const Icon(Icons.clear, color: Colors.white54),
+                icon: Icon(
+                  Icons.clear,
+                  color: context.isDarkMode ? Colors.white54 : Colors.black54,
+                ),
                 onPressed: () {
                   _searchController.clear();
                   context.read<SearchFavouriteCubit>().searchSongInFavourite(

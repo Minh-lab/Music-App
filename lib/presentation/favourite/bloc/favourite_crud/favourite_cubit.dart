@@ -10,7 +10,7 @@ import 'package:spotify_me/service_locator.dart';
 class FavouriteCubit extends Cubit<FavouriteState> {
   FavouriteCubit() : super(FavouriteLoading());
   Future<void> getFavourite() async {
-    emit(FavouriteLoading());
+    if (!isClosed) emit(FavouriteLoading());
 
     var result = await sl<GetFavouriteUsecase>().call();
     result.fold(
@@ -18,7 +18,7 @@ class FavouriteCubit extends Cubit<FavouriteState> {
         emit(FavouriteFailure());
       },
       (data) {
-        emit(FavouriteLoaded(list: data));
+        if (!isClosed) emit(FavouriteLoaded(list: data));
       },
     );
   }
