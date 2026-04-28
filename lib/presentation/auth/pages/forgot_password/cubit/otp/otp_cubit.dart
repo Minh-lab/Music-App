@@ -6,11 +6,10 @@ import 'package:spotify_me/presentation/auth/pages/forgot_password/cubit/otp/otp
 import 'package:spotify_me/service_locator.dart';
 
 class OtpCubit extends Cubit<OtpState> {
-  Timer? _timer; // Biến giữ đồng hồ đếm
+  Timer? _timer;
 
   OtpCubit() : super(OtpInitial());
 
-  // RẤT QUAN TRỌNG: Hủy đồng hồ khi người dùng thoát trang
   @override
   Future<void> close() {
     _timer?.cancel();
@@ -18,7 +17,6 @@ class OtpCubit extends Cubit<OtpState> {
   }
 
   Future<void> sendOtpResetPassword(String email) async {
-    // Chặn không cho bấm gửi tiếp nếu đang trong lúc đếm ngược
     if (state is OtpCountdown) return;
 
     var result = await sl<SendOtpUsecase>().call(params: email);
@@ -29,28 +27,25 @@ class OtpCubit extends Cubit<OtpState> {
       },
       (r) {
         if (!isClosed) emit(OtpSendSuccess());
-        _startCountdown(60); // Gọi hàm bắt đầu đếm 60s
+        _startCountdown(60);
       },
     );
   }
 
-  // Hàm xử lý đếm ngược
   void _startCountdown(int startSeconds) {
     _timer?.cancel(); // Xóa timer cũ nếu có
     int remaining = startSeconds;
 
-    emit(OtpCountdown(remaining)); // Phát tín hiệu giây đầu tiên (60)
+    emit(OtpCountdown(remaining));
 
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       remaining--;
 
       if (remaining > 0) {
-        // Nếu còn thời gian -> emit số giây còn lại
         emit(OtpCountdown(remaining));
       } else {
-        // Hết giờ -> Hủy đồng hồ và mở khóa nút
         timer.cancel();
-        emit(OtpUnlocked()); // Trở lại trạng thái bình thường
+        emit(OtpUnlocked());
       }
     });
   }

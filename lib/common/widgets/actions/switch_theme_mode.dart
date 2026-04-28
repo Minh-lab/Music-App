@@ -22,17 +22,13 @@ class SwitchThemeModeState extends State<SwitchThemeMode> {
           padding: EdgeInsets.only(right: 30),
           activeTrackColor: Colors.black,
           activeThumbColor: Colors.white,
-          // Bạn có thể thêm icon mặt trăng/mặt trời cho xịn
           thumbIcon: WidgetStateProperty.resolveWith<Icon?>((
             Set<WidgetState> states,
           ) {
-            // 1. Nếu Switch đang ở trạng thái được chọn (Bật - Dark Mode)
             if (states.contains(WidgetState.selected)) {
               return const Icon(Icons.nightlight_round, color: Colors.amber);
             }
 
-            // 2. Nếu Switch đang ở trạng thái không được chọn (Tắt - Light Mode)
-            // Light mode → mặt trời, màu vàng amber
             return const Icon(Icons.wb_sunny_rounded, color: Colors.amber);
           }),
           inactiveThumbColor: Colors.white,

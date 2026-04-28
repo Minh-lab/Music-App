@@ -63,7 +63,7 @@ class ArtistsItunesService extends ArtistsService {
             name: artistName,
             track: 0,
             coverUrl: coverUrl,
-            listSong: [], // Để trống, sẽ nạp khi vào trang chi tiết
+            listSong: [], // 
           ),
         );
       }

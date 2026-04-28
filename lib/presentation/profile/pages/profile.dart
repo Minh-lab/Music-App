@@ -20,7 +20,7 @@ class Profile extends StatelessWidget {
           'Profile',
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 20, // Làm to tiêu đề cho đẹp
+            fontSize: 20, 
             color: context.isDarkMode ? Color(0xFFDBDBDB) : Colors.black,
           ),
         ),

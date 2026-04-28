@@ -9,9 +9,7 @@ class FavouriteSupabaseIml extends FavouriteService {
   @override
   Future<Either> getFavouriteSongs() async {
     try {
-      // Supabase tự động filter theo Row Level Security (RLS) cho auth.uid()
-      // Nên chỉ cần query bảng favourites.
-      // Dùng cú pháp JOIN 'songs(*)' để lấy luôn thông tin bài hát dựa trên foreign key song_id.
+
       var data = await sl<SupabaseClient>()
           .from('favourites')
           .select('song_id, songs(*)');
@@ -60,7 +58,7 @@ class FavouriteSupabaseIml extends FavouriteService {
       if (userId == null) {
         return const Left('User not login');
       }
-      // Dùng match đảm bảo xoá bằng chính xác tổ hợp song_id và user_id
+
       await sl<SupabaseClient>().from('favourites').delete().match({
         'song_id': songId,
         'user_id': userId,

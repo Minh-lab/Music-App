@@ -45,21 +45,19 @@ class _VerifyOtpState extends State<VerifyOtp> {
                   const SizedBox(width: 16),
                   BlocBuilder<OtpCubit, OtpState>(
                     builder: (context, state) {
-                      // Kiểm tra xem có đang ở trạng thái đếm ngược không
+           
                       final bool isCounting = state is OtpCountdown;
 
-                      // Lấy số giây còn lại (nếu đang đếm)
+            
                       final int secondsLeft = isCounting ? state.seconds : 0;
 
                       return BasicAppButton(
                         width: 10,
                         height: 60,
-                        // Đổi text: Đang đếm thì hiện "Thử lại sau 59s", không thì hiện "Send OTP"
                         title: isCounting
                             ? 'Resend in ${secondsLeft}s'
                             : 'Send OTP',
 
-                        // Khóa nút: Đang đếm thì truyền null để làm mờ nút, hết đếm thì truyền hàm vào
                         onPressed: isCounting
                             ? null
                             : () {

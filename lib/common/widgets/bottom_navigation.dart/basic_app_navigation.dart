@@ -17,7 +17,6 @@ class BasicAppNavigation extends StatelessWidget {
       height: 80, 
       padding: const EdgeInsets.symmetric(horizontal: 30),
       decoration: BoxDecoration(
-        // Màu sắc dựa trên chế độ sáng/tối
         color: context.isDarkMode ? const Color(0xFF343434) : Colors.white,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(40),
@@ -32,7 +31,7 @@ class BasicAppNavigation extends StatelessWidget {
         ],
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween, // Trải đều icon
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _navItem(Icons.home_rounded, 0, ),
           _navItem(Icons.explore_outlined, 1),

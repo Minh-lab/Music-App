@@ -101,7 +101,7 @@ class AuthSupabaseServiceImpl extends AuthService {
   ) async {
     // TODO: implement checkOtpResetPassword
     try {
-      // Chỉ gọi hàm xác thực mã
+  
       await sl<SupabaseClient>().auth.verifyOTP(
         email: email,
         token: otpCode,
@@ -109,7 +109,6 @@ class AuthSupabaseServiceImpl extends AuthService {
       );
       return Right('verify OTP success');
 
-      // Nếu không văng lỗi nghĩa là mã đúng
       print('Mã OTP chính xác!');
     } on AuthException catch (e) {
       print('Mã sai hoặc hết hạn: ${e.message}');

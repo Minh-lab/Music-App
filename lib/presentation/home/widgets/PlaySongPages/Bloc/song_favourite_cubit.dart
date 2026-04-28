@@ -8,7 +8,7 @@ class SongFavouriteCubit extends Cubit<SongFavouriteState> {
   Future<void> IsSongInFavourite(String songId) async {
     var result = await sl<IsSongInFavouriteUsecase>().call(params: songId);
 
-    // Kiểm tra Cubit đã bị đóng chưa trước khi emit
+
     if (isClosed) return;
 
     result.fold((l) => emit(SongNotInFavourite()), (r) {
