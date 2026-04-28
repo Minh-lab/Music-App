@@ -2,6 +2,32 @@
 
 SpotifyMe is a cross-platform music streaming application built with Flutter. It implements a modern, responsive user interface and follows Clean Architecture principles to ensure scalability, maintainability, and testability.
 
+## Screenshots
+
+<table>
+
+  <tr>
+    <td align="center"><b>Sign In</b></td>
+    <td align="center"><b>Register</b></td>
+    <td align="center"><b>Forgot Password</b></td>
+  </tr>
+  <tr>
+    <td><img src="screenshots/sign_in.png" width="250"></td>
+    <td><img src="screenshots/register.png" width="250"></td>
+    <td><img src="screenshots/forgot_password.png" width="250"></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Home</b></td>
+    <td align="center"><b>Explore</b></td>
+    <td align="center"><b>Now Playing</b></td>
+  </tr>
+  <tr>
+    <td><img src="screenshots/home.jpg" width="250"></td>
+    <td><img src="screenshots/explore.png" width="250"></td>
+    <td><img src="screenshots/now_playing.jpg" width="250"></td>
+  </tr>
+</table>
+
 ## Architecture
 
 This project strictly adheres to **Clean Architecture** patterns, separating concerns into three main layers:
@@ -42,23 +68,5 @@ State management is handled via `flutter_bloc` and dependency injection is provi
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/spotify_me.git
+   git clone [https://github.com/yourusername/spotify_me.git](https://github.com/yourusername/spotify_me.git)
    cd spotify_me
-   ```
-
-2. Install dependencies:
-   ```bash
-   flutter pub get
-   ```
-
-3. Configure environment:
-   Ensure you set your Supabase URL and Anon Key in your configuration files before running.
-
-4. Run the app:
-   ```bash
-   flutter run
-   ```
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
